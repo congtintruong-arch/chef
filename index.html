@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AI Chef Ultimate 5.0 — Bếp 3D Thông Minh</title>
+<title>AI Chef Ultimate 6.0 — Bếp Thực Tế 3D</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -29,7 +29,6 @@
         user-select: none;
     }
 
-    /* ==== CINEMATIC BACKGROUND ==== */
     .bg-scene {
         position: fixed; inset: 0; z-index: 0;
         background: 
@@ -80,7 +79,6 @@
         to { transform: translateY(-10vh) translateX(80px); opacity: 0; }
     }
 
-    /* ==== APP ==== */
     .app {
         position: relative; z-index: 1;
         width: 100%; max-width: 440px;
@@ -93,7 +91,6 @@
     .header {
         background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
         backdrop-filter: blur(28px) saturate(180%);
-        -webkit-backdrop-filter: blur(28px) saturate(180%);
         border: 1px solid var(--glass-border);
         border-radius: 22px; padding: 12px 14px;
         display: flex; align-items: center; gap: 11px;
@@ -160,11 +157,7 @@
         color: #ffb88c; letter-spacing: 0.5px;
     }
 
-    /* CONTEXT BAR */
-    .context-bar {
-        display: flex; gap: 5px; margin-top: 8px;
-        flex-shrink: 0;
-    }
+    .context-bar { display: flex; gap: 5px; margin-top: 8px; flex-shrink: 0; }
     .context-item {
         flex: 1;
         background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
@@ -184,7 +177,6 @@
     .context-label { font-size: 8px; color: var(--text-dim); font-weight: 600; }
     .context-item.active .context-label { color: #ffb88c; }
 
-    /* CHAT */
     .chat {
         flex: 1; overflow-y: auto; overflow-x: hidden;
         padding: 12px 2px; display: flex; flex-direction: column; gap: 12px;
@@ -234,7 +226,6 @@
         box-shadow: 0 10px 30px rgba(255, 122, 61, 0.4);
     }
 
-    /* ANALYSIS BLOCK */
     .analysis-block {
         background: linear-gradient(135deg, rgba(0, 212, 170, 0.12), rgba(0, 180, 216, 0.08));
         border: 1px solid rgba(0, 212, 170, 0.3);
@@ -257,7 +248,6 @@
     }
     .analysis-label { color: #7dd3c0; font-weight: 500; }
 
-    /* FOOD CARDS */
     .food-cards { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
     .food-card {
         background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
@@ -334,8 +324,7 @@
     }
     .food-meta {
         display: flex; gap: 7px; margin-top: 4px;
-        font-size: 9.5px; color: #7dd3c0;
-        flex-wrap: wrap;
+        font-size: 9.5px; color: #7dd3c0; flex-wrap: wrap;
     }
     .food-badge {
         position: absolute; top: 6px; right: 6px;
@@ -350,7 +339,6 @@
         50% { transform: scale(1.08); }
     }
 
-    /* TYPING */
     .typing { display: flex; gap: 5px; padding: 4px 0; align-items: center; }
     .typing span {
         width: 8px; height: 8px;
@@ -365,7 +353,6 @@
         40% { transform: scale(1.2) translateY(-4px); opacity: 1; }
     }
 
-    /* INPUT */
     .input-wrap { flex-shrink: 0; padding-top: 5px; }
     .chips-row {
         display: flex; gap: 6px; overflow-x: auto;
@@ -394,11 +381,6 @@
         border: 1px solid var(--glass-border);
         border-radius: 100px; padding: 5px 5px 5px 16px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-        transition: all 0.3s;
-    }
-    .input-bar:focus-within {
-        border-color: rgba(255, 122, 61, 0.6);
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 3px rgba(255, 122, 61, 0.2);
     }
     #userInput {
         flex: 1; background: transparent; border: none; outline: none;
@@ -412,16 +394,15 @@
         color: white; font-size: 17px; cursor: pointer;
         display: flex; align-items: center; justify-content: center;
         box-shadow: 0 8px 24px rgba(255, 122, 61, 0.5);
-        transition: all 0.25s;
         flex-shrink: 0; animation: gradientShift 3s ease infinite;
     }
     .send-btn:active { transform: scale(0.88); }
     .send-btn:disabled { opacity: 0.4; pointer-events: none; }
 
-    /* ==== MODAL ==== */
+    /* MODAL */
     .modal {
         position: fixed; inset: 0; z-index: 200;
-        background: rgba(5, 7, 15, 0.92);
+        background: rgba(5, 7, 15, 0.94);
         backdrop-filter: blur(24px);
         display: flex; align-items: flex-end; justify-content: center;
         opacity: 0; pointer-events: none;
@@ -483,7 +464,6 @@
         color: #ffb88c; font-weight: 600;
     }
 
-    /* STATS */
     .stats-grid {
         display: grid; grid-template-columns: repeat(4, 1fr);
         gap: 5px; margin-bottom: 14px;
@@ -503,7 +483,6 @@
     }
     .stat-label { font-size: 8px; color: var(--text-dim); margin-top: 2px; font-weight: 600; }
 
-    /* SECTION */
     .section-title {
         font-size: 10.5px; color: #7dd3c0; font-weight: 700;
         text-transform: uppercase; letter-spacing: 0.8px;
@@ -514,7 +493,7 @@
         background: linear-gradient(90deg, rgba(0,212,170,0.4), transparent);
     }
 
-    /* INGREDIENTS - CHI TIẾT ĐỊNH LƯỢNG */
+    /* INGREDIENTS */
     .ingredients-list {
         display: flex; flex-direction: column; gap: 5px;
         margin-bottom: 16px;
@@ -565,7 +544,7 @@
     .nutrition-chart {
         background: linear-gradient(135deg, rgba(108, 92, 231, 0.12), rgba(0, 180, 216, 0.06));
         border: 1px solid rgba(108, 92, 231, 0.3);
-        border-radius: 15px; padding: 12px; margin-bottom: 16px;
+        border-radius: 15px; padding: 12px; margin-bottom: 14px;
     }
     .nutri-row {
         display: flex; align-items: center; gap: 9px; margin-bottom: 9px;
@@ -587,291 +566,116 @@
     .nutri-fill.carb { background: linear-gradient(90deg, #ffd93d, #ff9a3d); }
     .nutri-fill.fat { background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
     .nutri-fill.fiber { background: linear-gradient(90deg, #00d4aa, #00b4d8); }
+    .nutri-fill.sodium { background: linear-gradient(90deg, #ff6b6b, #ff4757); }
     .nutri-value {
         font-size: 10.5px; font-weight: 700; color: #fff;
-        width: 40px; text-align: right; flex-shrink: 0;
+        width: 52px; text-align: right; flex-shrink: 0;
+    }
+    .nutri-note {
+        font-size: 9px; color: #8a92a8; margin-top: 8px; font-style: italic;
+        text-align: center;
     }
 
-    /* ============ KITCHEN 3D SIMULATION ============ */
+    /* ============ KITCHEN REAL 3D ============ */
     .kitchen-scene {
         position: relative;
-        width: 100%; height: 320px;
+        width: 100%; height: 340px;
         border-radius: 18px;
-        background: linear-gradient(180deg, #1a1030 0%, #0d0818 100%);
         overflow: hidden;
         margin-bottom: 12px;
         box-shadow: inset 0 0 60px rgba(0,0,0,0.9), 0 8px 30px rgba(0,0,0,0.6);
-        perspective: 700px;
+        background: #0a0510;
     }
-
-    /* Kitchen wall */
-    .kitchen-wall {
+    .kitchen-svg {
         position: absolute; inset: 0;
-        background: 
-            linear-gradient(180deg, rgba(60, 40, 100, 0.4) 0%, rgba(30, 20, 60, 0.5) 60%, rgba(15, 10, 30, 0.8) 100%);
-    }
-    .kitchen-wall::before {
-        content: '';
-        position: absolute; inset: 0;
-        background-image: 
-            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-        background-size: 30px 30px;
+        width: 100%; height: 100%;
+        display: block;
     }
 
-    /* Shelf / cabinets at top */
-    .kitchen-shelf {
-        position: absolute; top: 0; left: 0; right: 0; height: 42px;
-        background: linear-gradient(180deg, #3a2a5a, #251a42);
-        border-bottom: 2px solid #4a3a70;
-        display: flex; justify-content: space-around; align-items: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    .shelf-item {
-        width: 22px; height: 26px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-        border-radius: 3px 3px 5px 5px;
-        border-top: 3px solid #ff7a3d;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 12px;
-        box-shadow: inset 0 -4px 8px rgba(0,0,0,0.3);
-    }
-    .shelf-item:nth-child(odd) { border-top-color: #6c5ce7; }
-    .shelf-item:nth-child(3n) { border-top-color: #00d4aa; }
-
-    /* Hanging utensils */
-    .utensil {
-        position: absolute; top: 44px;
-        font-size: 16px;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-        animation: utensilSway 4s ease-in-out infinite;
-    }
-    .utensil:nth-child(1) { left: 10%; animation-delay: 0s; }
-    .utensil:nth-child(2) { left: 20%; animation-delay: -1s; }
-    .utensil:nth-child(3) { left: 30%; animation-delay: -2s; }
-    @keyframes utensilSway {
-        0%, 100% { transform: rotate(-3deg); }
-        50% { transform: rotate(3deg); }
-    }
-
-    /* Countertop */
-    .countertop {
-        position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
-        background: linear-gradient(180deg, #4a3a2a 0%, #2a1f15 100%);
-        border-top: 3px solid #6a4a2a;
-        box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
-        transform: rotateX(8deg);
-        transform-origin: bottom;
-    }
-    .countertop::after {
-        content: '';
-        position: absolute; top: 0; left: 0; right: 0; height: 3px;
-        background: linear-gradient(90deg, transparent, rgba(255,217,61,0.3), transparent);
-        animation: counterShine 3s linear infinite;
-    }
-    @keyframes counterShine {
-        from { transform: translateX(-100%); }
-        to { transform: translateX(100%); }
-    }
-
-    /* Stove */
-    .stove {
-        position: absolute; bottom: 90px; left: 50%;
-        transform: translateX(-50%) rotateX(8deg);
-        width: 160px; height: 30px;
-        background: linear-gradient(180deg, #1a1a22, #0a0a10);
-        border-radius: 12px 12px 6px 6px;
-        box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), 0 3px 8px rgba(0,0,0,0.5);
-        border-top: 1px solid #333;
-    }
-    .stove::before {
-        content: '';
-        position: absolute; top: 8px; left: 50%;
-        transform: translateX(-50%);
-        width: 110px; height: 12px;
-        background: radial-gradient(ellipse, rgba(255,122,61,0.6), rgba(255,71,126,0.3) 40%, transparent 70%);
-        border-radius: 50%;
-        opacity: 0;
-        transition: opacity 0.4s;
-    }
-    .stove.on::before { opacity: 1; animation: stoveFlame 0.4s infinite alternate; }
-    @keyframes stoveFlame {
-        0% { transform: translateX(-50%) scaleY(1); opacity: 0.7; }
-        100% { transform: translateX(-50%) scaleY(1.3); opacity: 1; }
-    }
-
-    /* Pan 3D */
-    .pan-3d {
-        position: absolute; bottom: 115px; left: 50%;
-        transform: translateX(-50%) rotateX(8deg);
-        width: 130px; height: 50px;
-        transition: transform 0.4s;
-        transform-style: preserve-3d;
-    }
-    .pan-3d.shake { animation: panShake 0.5s ease-in-out; }
-    @keyframes panShake {
-        0%, 100% { transform: translateX(-50%) rotateX(8deg) rotate(0deg); }
-        25% { transform: translateX(-50%) rotateX(8deg) rotate(-6deg) translateY(-3px); }
-        75% { transform: translateX(-50%) rotateX(8deg) rotate(6deg) translateY(-3px); }
-    }
-
-    .pan-body {
-        position: absolute; bottom: 0; left: 0;
-        width: 130px; height: 32px;
-        background: linear-gradient(180deg, #3a3a48, #1a1a22 60%, #0a0a10);
-        border-radius: 50% 50% 30% 30%;
-        box-shadow: 
-            inset 0 8px 15px rgba(0,0,0,0.7),
-            inset 0 -3px 8px rgba(255,255,255,0.05),
-            0 6px 16px rgba(0,0,0,0.6);
-        border: 1px solid #4a4a5a;
-        overflow: hidden;
-    }
-    .pan-rim {
-        position: absolute; bottom: 28px; left: 0;
-        width: 130px; height: 8px;
-        background: linear-gradient(180deg, #5a5a6a, #2a2a35);
-        border-radius: 50%;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-    }
-    .pan-content {
-        position: absolute; bottom: 4px; left: 50%;
-        transform: translateX(-50%);
-        font-size: 22px;
-        transition: all 0.5s;
-    }
-    .pan-handle {
-        position: absolute; bottom: 12px; right: -50px;
-        width: 55px; height: 8px;
-        background: linear-gradient(180deg, #2a2a35, #15151d);
-        border-radius: 6px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.5);
-        border: 1px solid #3a3a4a;
-    }
-
-    /* Fire */
-    .fire-3d {
-        position: absolute; bottom: 88px; left: 50%;
-        transform: translateX(-50%);
-        width: 120px; height: 40px;
-        opacity: 0; transition: opacity 0.4s;
-        pointer-events: none;
-    }
-    .fire-3d.on { opacity: 1; }
+    /* Animated SVG elements via classes */
+    .flame-group { opacity: 0; transition: opacity 0.5s; }
+    .flame-group.on { opacity: 1; }
     .flame {
-        position: absolute; bottom: 0;
-        width: 20px; height: 40px;
-        background: radial-gradient(ellipse at bottom, #ffd93d 0%, #ff7a3d 40%, #ff477e 70%, transparent 100%);
-        border-radius: 50% 50% 20% 20%;
-        filter: blur(2px);
-        animation: flameJump 0.3s infinite alternate;
-    }
-    .flame:nth-child(1) { left: 20px; animation-delay: 0s; height: 35px; }
-    .flame:nth-child(2) { left: 45px; animation-delay: 0.1s; height: 42px; }
-    .flame:nth-child(3) { left: 65px; animation-delay: 0.15s; height: 38px; }
-    .flame:nth-child(4) { left: 85px; animation-delay: 0.05s; height: 36px; }
-    @keyframes flameJump {
-        0% { transform: scaleY(1) translateY(0); opacity: 0.85; }
-        100% { transform: scaleY(1.2) translateY(-3px); opacity: 1; }
-    }
-
-    /* Steam */
-    .steam-3d {
-        position: absolute; bottom: 145px; left: 50%;
-        transform: translateX(-50%);
-        width: 80px; height: 80px;
-        opacity: 0; transition: opacity 0.5s;
-        pointer-events: none;
-    }
-    .steam-3d.on { opacity: 1; }
-    .steam-puff {
-        position: absolute; bottom: 0;
-        width: 14px; height: 14px;
-        background: radial-gradient(circle, rgba(255,255,255,0.7), transparent);
-        border-radius: 50%;
-        animation: steamRise 2.5s ease-out infinite;
-    }
-    .steam-puff:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .steam-puff:nth-child(2) { left: 25%; animation-delay: 0.5s; }
-    .steam-puff:nth-child(3) { left: 45%; animation-delay: 1s; }
-    .steam-puff:nth-child(4) { left: 65%; animation-delay: 1.5s; }
-    .steam-puff:nth-child(5) { left: 85%; animation-delay: 2s; }
-    @keyframes steamRise {
-        0% { transform: translateY(0) scale(0.4); opacity: 0; }
-        20% { opacity: 0.8; }
-        100% { transform: translateY(-80px) scale(2.5); opacity: 0; }
-    }
-
-    /* AI Chef character */
-    .ai-chef {
-        position: absolute; bottom: 60px; right: 15px;
-        font-size: 40px;
-        filter: drop-shadow(0 4px 12px rgba(255,122,61,0.6));
-        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         transform-origin: bottom center;
-        z-index: 5;
+        animation: flameFlicker 0.15s infinite alternate;
     }
-    .ai-chef.cooking {
-        animation: chefCook 0.7s ease-in-out infinite;
-    }
-    @keyframes chefCook {
-        0%, 100% { transform: translateY(0) rotate(-5deg); }
-        50% { transform: translateY(-8px) rotate(5deg); }
-    }
-    .ai-chef.sprinkle { animation: chefSprinkle 0.6s ease-in-out; }
-    @keyframes chefSprinkle {
-        0%, 100% { transform: rotate(-5deg); }
-        25% { transform: rotate(-25deg) translateY(-5px); }
-        75% { transform: rotate(15deg) translateY(-5px); }
-    }
-    .ai-chef.stir { animation: chefStir 0.8s ease-in-out infinite; }
-    @keyframes chefStir {
-        0%, 100% { transform: rotate(-3deg) translateX(0); }
-        50% { transform: rotate(3deg) translateX(-8px); }
+    .flame:nth-child(2) { animation-delay: 0.05s; }
+    .flame:nth-child(3) { animation-delay: 0.1s; }
+    @keyframes flameFlicker {
+        0% { transform: scaleY(1) translateY(0); opacity: 0.9; }
+        100% { transform: scaleY(1.25) translateY(-2px); opacity: 1; }
     }
 
-    /* Flying ingredients */
-    .flying-3d {
-        position: absolute;
-        font-size: 22px;
-        z-index: 6;
-        opacity: 0;
-        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-        pointer-events: none;
+    .steam-group { opacity: 0; transition: opacity 0.6s; }
+    .steam-group.on { opacity: 1; }
+    .steam-puff-svg {
+        animation: steamFloat 2.5s ease-out infinite;
+        transform-origin: center bottom;
     }
-    .flying-3d.fly {
-        animation: flyArc 1.4s cubic-bezier(0.5, 0, 0.5, 1) forwards;
-    }
-    @keyframes flyArc {
-        0% { opacity: 0; transform: translate(0, 0) scale(0.4) rotate(0deg); }
-        15% { opacity: 1; }
-        50% { transform: translate(calc(var(--mx) * 0.5), calc(var(--my) * 0.5 - 60px)) scale(1.3) rotate(180deg); }
-        100% { opacity: 1; transform: translate(var(--mx), var(--my)) scale(0.7) rotate(360deg); }
+    .steam-puff-svg:nth-child(2) { animation-delay: 0.5s; }
+    .steam-puff-svg:nth-child(3) { animation-delay: 1s; }
+    .steam-puff-svg:nth-child(4) { animation-delay: 1.5s; }
+    .steam-puff-svg:nth-child(5) { animation-delay: 2s; }
+    @keyframes steamFloat {
+        0% { transform: translateY(0) scale(0.5); opacity: 0; }
+        20% { opacity: 0.7; }
+        100% { transform: translateY(-70px) scale(1.8); opacity: 0; }
     }
 
-    /* Spice particles when sprinkling */
-    .spice-particle {
-        position: absolute;
-        width: 4px; height: 4px;
-        background: #ffd93d;
-        border-radius: 50%;
-        box-shadow: 0 0 8px #ffd93d;
-        pointer-events: none;
-        opacity: 0;
+    .oil-bubble {
+        animation: oilBubble 1.2s ease-in infinite;
+        transform-origin: center;
     }
-    .spice-particle.fall { animation: spiceFall 1s ease-in forwards; }
-    @keyframes spiceFall {
-        0% { opacity: 0; transform: translate(0, 0); }
-        20% { opacity: 1; }
-        100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+    .oil-bubble:nth-child(2) { animation-delay: 0.3s; }
+    .oil-bubble:nth-child(3) { animation-delay: 0.6s; }
+    .oil-bubble:nth-child(4) { animation-delay: 0.9s; }
+    @keyframes oilBubble {
+        0% { transform: scale(0) translateY(0); opacity: 0; }
+        30% { transform: scale(1) translateY(-3px); opacity: 1; }
+        100% { transform: scale(0.5) translateY(-12px); opacity: 0; }
     }
 
-    /* Simulation HUD */
+    /* Wok / pan tilt */
+    #panGroup {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: 200px 230px;
+    }
+    #panGroup.tilt-left { transform: rotate(-8deg); }
+    #panGroup.tilt-right { transform: rotate(8deg); }
+    #panGroup.shake { animation: panShakeReal 0.5s ease-in-out; }
+    @keyframes panShakeReal {
+        0%, 100% { transform: rotate(0deg) translateY(0); }
+        25% { transform: rotate(-6deg) translateY(-4px); }
+        75% { transform: rotate(6deg) translateY(-4px); }
+    }
+
+    /* Chef */
+    #chefGroup {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: 340px 220px;
+    }
+    #chefGroup.cooking { animation: chefBounce 0.6s ease-in-out infinite; }
+    #chefGroup.sprinkle { animation: chefSprinkleReal 0.7s ease-in-out; }
+    #chefGroup.stir { animation: chefStirReal 0.8s ease-in-out infinite; }
+    @keyframes chefBounce {
+        0%, 100% { transform: translateY(0) rotate(-2deg); }
+        50% { transform: translateY(-4px) rotate(2deg); }
+    }
+    @keyframes chefSprinkleReal {
+        0%, 100% { transform: rotate(-2deg); }
+        30% { transform: rotate(-12deg) translateY(-3px); }
+        60% { transform: rotate(8deg) translateY(-3px); }
+    }
+    @keyframes chefStirReal {
+        0%, 100% { transform: translateX(0) rotate(0); }
+        50% { transform: translateX(-6px) rotate(-4deg); }
+    }
+
+    /* Kitchen HUD */
     .sim-hud {
-        position: absolute; top: 54px; left: 10px; right: 10px;
+        position: absolute; top: 8px; left: 8px; right: 8px;
         display: flex; justify-content: space-between;
-        pointer-events: none;
-        z-index: 10;
+        pointer-events: none; z-index: 10;
     }
     .hud-chip {
         background: rgba(10, 14, 25, 0.85);
@@ -882,18 +686,46 @@
         font-size: 9.5px;
         color: #ffb88c;
         font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        display: flex; align-items: center; gap: 4px;
     }
     .hud-chip .dot {
         width: 5px; height: 5px; border-radius: 50%;
-        background: #00d4aa;
-        box-shadow: 0 0 6px #00d4aa;
+        background: #00d4aa; box-shadow: 0 0 6px #00d4aa;
         animation: blink 1s infinite;
     }
 
-    /* Simulation controls */
+    /* Flying ingredient (DOM overlay) */
+    .flying-3d {
+        position: absolute;
+        font-size: 22px;
+        z-index: 6;
+        opacity: 0;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+        pointer-events: none;
+    }
+    .flying-3d.fly { animation: flyArc 1.4s cubic-bezier(0.5, 0, 0.5, 1) forwards; }
+    @keyframes flyArc {
+        0% { opacity: 0; transform: translate(0, 0) scale(0.4) rotate(0deg); }
+        15% { opacity: 1; }
+        50% { transform: translate(calc(var(--mx) * 0.5), calc(var(--my) * 0.5 - 70px)) scale(1.3) rotate(180deg); }
+        100% { opacity: 1; transform: translate(var(--mx), var(--my)) scale(0.7) rotate(360deg); }
+    }
+
+    .spice-particle {
+        position: absolute;
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+    }
+    .spice-particle.fall { animation: spiceFall 1s ease-in forwards; }
+    @keyframes spiceFall {
+        0% { opacity: 0; transform: translate(0, 0) scale(0); }
+        20% { opacity: 1; transform: scale(1.2); }
+        100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.5); }
+    }
+
+    /* SIM CONTROLS */
     .sim-status {
         font-size: 11px; color: #ffb88c; font-weight: 600;
         margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
@@ -904,7 +736,6 @@
         background: #00d4aa; box-shadow: 0 0 8px #00d4aa;
         animation: blink 1s infinite;
     }
-
     .sim-progress {
         height: 4px; background: rgba(255,255,255,0.1);
         border-radius: 100px; overflow: hidden;
@@ -918,9 +749,7 @@
         transition: width 0.3s;
         animation: progressGlow 1.5s linear infinite;
     }
-    @keyframes progressGlow {
-        to { background-position: 200% 0; }
-    }
+    @keyframes progressGlow { to { background-position: 200% 0; } }
 
     .sim-controls {
         display: flex; gap: 7px; align-items: center;
@@ -940,12 +769,9 @@
         border: none; box-shadow: 0 6px 20px rgba(255, 122, 61, 0.5);
     }
     .sim-btn:disabled { opacity: 0.5; pointer-events: none; }
-    .sim-btn.speed-btn {
-        flex: 0 0 auto; padding: 10px 12px;
-        font-size: 11px;
-    }
+    .sim-btn.speed-btn { flex: 0 0 auto; padding: 10px 12px; font-size: 11px; }
 
-    /* Steps */
+    /* STEPS */
     .steps-container {
         display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px;
     }
@@ -1027,6 +853,42 @@
     .action-icon { font-size: 16px; }
     .action-label { font-size: 8.5px; color: #c4c9e0; font-weight: 600; text-align: center; }
 
+    /* SUBSTITUTES */
+    .substitutes-box {
+        background: linear-gradient(135deg, rgba(255, 217, 61, 0.1), rgba(255, 122, 61, 0.05));
+        border: 1px solid rgba(255, 217, 61, 0.3);
+        border-radius: 14px; padding: 12px; margin-bottom: 14px;
+    }
+    .sub-title {
+        font-size: 10.5px; color: #ffd93d; font-weight: 700;
+        margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+    }
+    .sub-item {
+        font-size: 11px; color: #d8e0ee; line-height: 1.6;
+        padding-left: 12px; position: relative;
+        margin-bottom: 4px;
+    }
+    .sub-item::before {
+        content: '→'; position: absolute; left: 0;
+        color: #ffb88c; font-weight: 700;
+    }
+
+    /* TIPS */
+    .tips-box {
+        background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(0, 180, 216, 0.05));
+        border: 1px solid rgba(0, 212, 170, 0.3);
+        border-radius: 14px; padding: 12px; margin-bottom: 14px;
+    }
+    .tip-item {
+        font-size: 11px; color: #b8e6d8; line-height: 1.6;
+        padding-left: 16px; position: relative;
+        margin-bottom: 5px;
+    }
+    .tip-item::before {
+        content: '💡'; position: absolute; left: 0;
+        font-size: 10px;
+    }
+
     .modal-close-btn {
         width: 100%; padding: 12px; border-radius: 100px; border: none;
         background: linear-gradient(135deg, #ff7a3d, #ff477e);
@@ -1052,6 +914,25 @@
         max-width: 85%; text-align: center;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Random suggestion button */
+    .random-fab {
+        position: fixed; bottom: 88px; right: 16px;
+        width: 48px; height: 48px; border-radius: 50%;
+        background: linear-gradient(135deg, #6c5ce7, #00d4aa);
+        border: none; color: white; font-size: 20px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(108, 92, 231, 0.6), inset 0 1px 0 rgba(255,255,255,0.3);
+        z-index: 150;
+        animation: fabPulse 3s infinite;
+        transition: all 0.3s;
+    }
+    .random-fab:active { transform: scale(0.9) rotate(20deg); }
+    @keyframes fabPulse {
+        0%, 100% { box-shadow: 0 10px 30px rgba(108, 92, 231, 0.6); }
+        50% { box-shadow: 0 10px 30px rgba(108, 92, 231, 0.6), 0 0 30px rgba(0, 212, 170, 0.6); }
+    }
 </style>
 </head>
 <body>
@@ -1069,10 +950,10 @@
     <div class="header">
         <div class="ai-avatar-3d">🤖</div>
         <div class="header-text">
-            <h1>AI Chef Ultimate</h1>
-            <p><span class="status-dot"></span> Bếp 3D • Định lượng • Mô phỏng</p>
+            <h1>AI Chef Ultimate 6.0</h1>
+            <p><span class="status-dot"></span> Bếp thực tế • 40+ món • Dinh dưỡng chuẩn</p>
         </div>
-        <div class="header-badge">5.0</div>
+        <div class="header-badge">6.0</div>
     </div>
 
     <div class="context-bar">
@@ -1098,14 +979,14 @@
         <div class="msg ai">
             <div class="msg-avatar">🤖</div>
             <div class="bubble">
-                Xin chào! Mình là <b>AI Chef Ultimate 5.0</b> 👨‍🍳<br>
-                Mình có <b>bếp 3D</b>, mô phỏng AI thao tác, <b>định lượng chi tiết</b> từng nguyên liệu!
+                Xin chào! Mình là <b>AI Chef Ultimate 6.0</b> 👨‍🍳<br>
+                <b>40+ món ăn</b> với định lượng chính xác, dinh dưỡng chuẩn Viện Dinh Dưỡng VN, và <b>bếp 3D thực tế</b>!
             </div>
         </div>
         <div class="msg ai">
             <div class="msg-avatar">🤖</div>
             <div class="bubble">
-                💡 Chạm các ô phía trên để tùy chỉnh, rồi hỏi món bạn muốn nấu nhé!
+                💡 Chạm các ô phía trên để tùy chỉnh, hoặc bấm 🎲 để AI chọn ngẫu nhiên món ngon!
             </div>
         </div>
     </div>
@@ -1120,6 +1001,7 @@
             <div class="chip" data-q="Món từ trứng">🥚 Từ trứng</div>
             <div class="chip" data-q="Món từ bò">🥩 Từ bò</div>
             <div class="chip" data-q="Món từ tôm">🦐 Từ tôm</div>
+            <div class="chip" data-q="Món từ cá">🐟 Từ cá</div>
             <div class="chip" data-q="Món healthy ít calo">💪 Healthy</div>
             <div class="chip" data-q="Món nhanh 15 phút">⚡ Nhanh</div>
         </div>
@@ -1130,6 +1012,8 @@
         </div>
     </div>
 </div>
+
+<button class="random-fab" id="randomFab" title="Chọn ngẫu nhiên">🎲</button>
 
 <!-- MODAL -->
 <div class="modal" id="modal">
@@ -1167,20 +1051,18 @@
             </div>
         </div>
 
-        <!-- NGUYÊN LIỆU ĐỊNH LƯỢNG -->
-        <div class="section-title">🥘 Nguyên liệu (định lượng theo <span id="servingsLabel">2</span> người)</div>
+        <div class="section-title">🥘 Nguyên liệu (định lượng cho <span id="servingsLabel">2</span> người)</div>
         <div class="ingredients-list" id="ingredientsList"></div>
 
-        <!-- DINH DƯỠNG -->
-        <div class="section-title">📊 Dinh dưỡng / khẩu phần</div>
+        <div class="section-title">📊 Dinh dưỡng / khẩu phần <span style="font-size:8px;color:#8a92a8;font-weight:400;text-transform:none;letter-spacing:0;">(Chuẩn Viện Dinh Dưỡng VN)</span></div>
         <div class="nutrition-chart">
             <div class="nutri-row">
-                <span class="nutri-label">Protein</span>
+                <span class="nutri-label">Đạm (Protein)</span>
                 <div class="nutri-bar"><div class="nutri-fill protein" id="nutriProtein" style="width:0%"></div></div>
                 <span class="nutri-value" id="nutriProteinVal">0g</span>
             </div>
             <div class="nutri-row">
-                <span class="nutri-label">Carbs</span>
+                <span class="nutri-label">Tinh bột</span>
                 <div class="nutri-bar"><div class="nutri-fill carb" id="nutriCarb" style="width:0%"></div></div>
                 <span class="nutri-value" id="nutriCarbVal">0g</span>
             </div>
@@ -1194,64 +1076,217 @@
                 <div class="nutri-bar"><div class="nutri-fill fiber" id="nutriFiber" style="width:0%"></div></div>
                 <span class="nutri-value" id="nutriFiberVal">0g</span>
             </div>
+            <div class="nutri-row">
+                <span class="nutri-label">Natri</span>
+                <div class="nutri-bar"><div class="nutri-fill sodium" id="nutriSodium" style="width:0%"></div></div>
+                <span class="nutri-value" id="nutriSodiumVal">0mg</span>
+            </div>
+            <div class="nutri-note">⚕️ Giá trị tham khảo theo bảng thành phần dinh dưỡng VN 2017</div>
         </div>
 
-        <!-- KITCHEN 3D SIMULATION -->
-        <div class="section-title">🎬 Bếp 3D — AI thao tác trực quan</div>
+        <!-- KITCHEN 3D SVG -->
+        <div class="section-title">🎬 Bếp thực tế — AI thao tác trực quan</div>
         <div class="kitchen-scene" id="kitchenScene">
-            <div class="kitchen-wall"></div>
+            <svg class="kitchen-svg" viewBox="0 0 400 340" preserveAspectRatio="xMidYMid meet">
+                <!-- Background wall -->
+                <defs>
+                    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2a1f4a"/>
+                        <stop offset="100%" stop-color="#150d28"/>
+                    </linearGradient>
+                    <linearGradient id="counterGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#6a4a2a"/>
+                        <stop offset="50%" stop-color="#4a3520"/>
+                        <stop offset="100%" stop-color="#2a1f15"/>
+                    </linearGradient>
+                    <linearGradient id="panGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#4a4a5a"/>
+                        <stop offset="50%" stop-color="#2a2a35"/>
+                        <stop offset="100%" stop-color="#15151d"/>
+                    </linearGradient>
+                    <radialGradient id="flameGrad" cx="50%" cy="100%" r="60%">
+                        <stop offset="0%" stop-color="#ffd93d"/>
+                        <stop offset="40%" stop-color="#ff7a3d"/>
+                        <stop offset="80%" stop-color="#ff477e" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#ff477e" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="steamGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                    <linearGradient id="stoveGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#333"/>
+                        <stop offset="100%" stop-color="#0a0a10"/>
+                    </linearGradient>
+                    <linearGradient id="shelfGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#3a2a5a"/>
+                        <stop offset="100%" stop-color="#251a42"/>
+                    </linearGradient>
+                </defs>
 
-            <!-- Shelf with items -->
-            <div class="kitchen-shelf">
-                <div class="shelf-item">🫙</div>
-                <div class="shelf-item">🧂</div>
-                <div class="shelf-item">🌶️</div>
-                <div class="shelf-item">🍯</div>
-                <div class="shelf-item">🧄</div>
-                <div class="shelf-item">🥄</div>
-                <div class="shelf-item">🥢</div>
-                <div class="shelf-item">🍶</div>
-            </div>
+                <!-- Wall with subtle tiles -->
+                <rect x="0" y="0" width="400" height="220" fill="url(#wallGrad)"/>
+                <g opacity="0.15" stroke="#ffffff" stroke-width="0.5">
+                    <line x1="0" y1="40" x2="400" y2="40"/>
+                    <line x1="0" y1="80" x2="400" y2="80"/>
+                    <line x1="0" y1="120" x2="400" y2="120"/>
+                    <line x1="0" y1="160" x2="400" y2="160"/>
+                    <line x1="0" y1="200" x2="400" y2="200"/>
+                    <line x1="50" y1="0" x2="50" y2="220"/>
+                    <line x1="100" y1="0" x2="100" y2="220"/>
+                    <line x1="150" y1="0" x2="150" y2="220"/>
+                    <line x1="200" y1="0" x2="200" y2="220"/>
+                    <line x1="250" y1="0" x2="250" y2="220"/>
+                    <line x1="300" y1="0" x2="300" y2="220"/>
+                    <line x1="350" y1="0" x2="350" y2="220"/>
+                </g>
 
-            <!-- Hanging utensils -->
-            <div class="utensil">🥄</div>
-            <div class="utensil">🍴</div>
-            <div class="utensil">🔪</div>
+                <!-- Shelf with jars -->
+                <rect x="0" y="0" width="400" height="40" fill="url(#shelfGrad)"/>
+                <rect x="0" y="40" width="400" height="3" fill="#4a3a70"/>
+                <!-- Jars on shelf -->
+                <g>
+                    <rect x="30" y="10" width="14" height="24" rx="2" fill="#8a5a2a" opacity="0.9"/>
+                    <rect x="30" y="10" width="14" height="4" fill="#ff7a3d"/>
+                    <rect x="70" y="8" width="12" height="26" rx="2" fill="#4a2a6a" opacity="0.9"/>
+                    <rect x="70" y="8" width="12" height="4" fill="#6c5ce7"/>
+                    <rect x="110" y="12" width="13" height="22" rx="2" fill="#2a6a4a" opacity="0.9"/>
+                    <rect x="110" y="12" width="13" height="4" fill="#00d4aa"/>
+                    <rect x="150" y="10" width="12" height="24" rx="2" fill="#a0522d" opacity="0.9"/>
+                    <rect x="150" y="10" width="12" height="4" fill="#ffd93d"/>
+                    <rect x="190" y="9" width="14" height="25" rx="2" fill="#6a2a4a" opacity="0.9"/>
+                    <rect x="190" y="9" width="14" height="4" fill="#ff477e"/>
+                    <rect x="240" y="11" width="13" height="23" rx="2" fill="#2a4a6a" opacity="0.9"/>
+                    <rect x="240" y="11" width="13" height="4" fill="#00b4d8"/>
+                    <rect x="280" y="10" width="12" height="24" rx="2" fill="#8a5a2a" opacity="0.9"/>
+                    <rect x="280" y="10" width="12" height="4" fill="#ff7a3d"/>
+                    <rect x="320" y="8" width="14" height="26" rx="2" fill="#4a2a6a" opacity="0.9"/>
+                    <rect x="320" y="8" width="14" height="4" fill="#6c5ce7"/>
+                    <rect x="360" y="12" width="12" height="22" rx="2" fill="#2a6a4a" opacity="0.9"/>
+                    <rect x="360" y="12" width="12" height="4" fill="#00d4aa"/>
+                </g>
 
-            <!-- Countertop -->
-            <div class="countertop"></div>
+                <!-- Hanging utensils -->
+                <g opacity="0.85">
+                    <!-- Hook -->
+                    <circle cx="80" cy="48" r="2" fill="#555"/>
+                    <line x1="80" y1="48" x2="80" y2="56" stroke="#888" stroke-width="1"/>
+                    <ellipse cx="80" cy="62" rx="4" ry="6" fill="#b8b8c8" stroke="#666" stroke-width="0.5"/>
+                    
+                    <circle cx="130" cy="48" r="2" fill="#555"/>
+                    <line x1="130" y1="48" x2="130" y2="58" stroke="#888" stroke-width="1"/>
+                    <path d="M 126 58 L 134 58 L 132 70 L 128 70 Z" fill="#a0a0b0" stroke="#666" stroke-width="0.5"/>
+                    
+                    <circle cx="180" cy="48" r="2" fill="#555"/>
+                    <line x1="180" y1="48" x2="180" y2="60" stroke="#888" stroke-width="1"/>
+                    <rect x="177" y="60" width="6" height="14" rx="1" fill="#c8c8d8"/>
+                    
+                    <circle cx="230" cy="48" r="2" fill="#555"/>
+                    <line x1="230" y1="48" x2="230" y2="56" stroke="#888" stroke-width="1"/>
+                    <path d="M 226 56 L 234 56 L 232 66 L 228 66 Z" fill="#d0d0e0"/>
+                </g>
 
-            <!-- Stove -->
-            <div class="stove" id="stove"></div>
+                <!-- Countertop -->
+                <rect x="0" y="220" width="400" height="120" fill="url(#counterGrad)"/>
+                <rect x="0" y="220" width="400" height="4" fill="#8a5a2a"/>
+                <rect x="0" y="222" width="400" height="1" fill="#ffd93d" opacity="0.4"/>
 
-            <!-- Fire -->
-            <div class="fire-3d" id="fire3D">
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
-            </div>
+                <!-- Stove base -->
+                <rect x="140" y="200" width="120" height="22" rx="3" fill="url(#stoveGrad)"/>
+                <rect x="145" y="204" width="110" height="3" rx="1" fill="#444" opacity="0.5"/>
+                <ellipse cx="200" cy="212" rx="40" ry="6" fill="#000" opacity="0.5"/>
 
-            <!-- Pan -->
-            <div class="pan-3d" id="pan3D">
-                <div class="pan-body">
-                    <div class="pan-content" id="panContent">🍳</div>
-                </div>
-                <div class="pan-rim"></div>
-                <div class="pan-handle"></div>
-            </div>
+                <!-- Flames (SVG) -->
+                <g class="flame-group" id="flameGroup">
+                    <ellipse cx="200" cy="212" rx="35" ry="8" fill="url(#flameGrad)" opacity="0.7"/>
+                    <g class="flame">
+                        <path d="M 200 212 Q 195 200 198 192 Q 202 198 200 212 Z" fill="#ffd93d" opacity="0.9"/>
+                    </g>
+                    <g class="flame">
+                        <path d="M 185 212 Q 180 202 184 194 Q 188 202 185 212 Z" fill="#ff7a3d" opacity="0.85"/>
+                    </g>
+                    <g class="flame">
+                        <path d="M 215 212 Q 220 202 216 194 Q 212 202 215 212 Z" fill="#ff7a3d" opacity="0.85"/>
+                    </g>
+                </g>
 
-            <!-- Steam -->
-            <div class="steam-3d" id="steam3D">
-                <div class="steam-puff"></div>
-                <div class="steam-puff"></div>
-                <div class="steam-puff"></div>
-                <div class="steam-puff"></div>
-                <div class="steam-puff"></div>
-            </div>
+                <!-- Wok/Pan -->
+                <g id="panGroup">
+                    <!-- Pan shadow -->
+                    <ellipse cx="200" cy="232" rx="60" ry="8" fill="#000" opacity="0.4"/>
+                    
+                    <!-- Pan body -->
+                    <path d="M 140 220 Q 140 200 200 200 Q 260 200 260 220 L 255 225 Q 200 230 145 225 Z" 
+                          fill="url(#panGrad)" stroke="#4a4a5a" stroke-width="0.8"/>
+                    
+                    <!-- Pan rim highlight -->
+                    <ellipse cx="200" cy="200" rx="60" ry="8" fill="none" stroke="#5a5a6a" stroke-width="1.5"/>
+                    <ellipse cx="200" cy="200" rx="55" ry="6" fill="#0a0a10" opacity="0.6"/>
+                    
+                    <!-- Pan handle -->
+                    <rect x="255" y="207" width="60" height="8" rx="3" fill="#1a1a22" stroke="#3a3a4a" stroke-width="0.5"/>
+                    <rect x="255" y="207" width="60" height="2" fill="#2a2a35" opacity="0.5"/>
+                    
+                    <!-- Oil bubbles -->
+                    <g id="oilBubbles" opacity="0">
+                        <circle class="oil-bubble" cx="180" cy="204" r="2" fill="#ffd93d" opacity="0.7"/>
+                        <circle class="oil-bubble" cx="200" cy="203" r="2.5" fill="#ffd93d" opacity="0.7"/>
+                        <circle class="oil-bubble" cx="220" cy="204" r="2" fill="#ffd93d" opacity="0.7"/>
+                        <circle class="oil-bubble" cx="195" cy="206" r="1.5" fill="#ffb88c" opacity="0.7"/>
+                    </g>
+                    
+                    <!-- Food content -->
+                    <text id="panFoodEmoji" x="200" y="212" font-size="22" text-anchor="middle" opacity="0.95">🍳</text>
+                </g>
 
-            <!-- AI Chef -->
-            <div class="ai-chef" id="aiChef">👨‍🍳</div>
+                <!-- Steam (SVG) -->
+                <g class="steam-group" id="steamGroup">
+                    <circle class="steam-puff-svg" cx="180" cy="180" r="8" fill="url(#steamGrad)"/>
+                    <circle class="steam-puff-svg" cx="200" cy="180" r="10" fill="url(#steamGrad)"/>
+                    <circle class="steam-puff-svg" cx="220" cy="180" r="8" fill="url(#steamGrad)"/>
+                    <circle class="steam-puff-svg" cx="190" cy="180" r="9" fill="url(#steamGrad)"/>
+                    <circle class="steam-puff-svg" cx="210" cy="180" r="9" fill="url(#steamGrad)"/>
+                </g>
+
+                <!-- AI Chef character -->
+                <g id="chefGroup">
+                    <!-- Body -->
+                    <ellipse cx="345" cy="205" rx="18" ry="22" fill="#ffffff" stroke="#d0d0d8" stroke-width="0.8"/>
+                    <!-- Chef hat -->
+                    <path d="M 330 188 Q 330 178 345 178 Q 360 178 360 188 L 358 192 L 332 192 Z" fill="#ffffff" stroke="#d0d0d8" stroke-width="0.5"/>
+                    <ellipse cx="345" cy="178" rx="14" ry="6" fill="#ffffff" stroke="#d0d0d8" stroke-width="0.5"/>
+                    <!-- Apron -->
+                    <path d="M 335 200 L 355 200 L 353 224 L 337 224 Z" fill="#ff7a3d" opacity="0.85"/>
+                    <!-- Buttons -->
+                    <circle cx="345" cy="208" r="1" fill="#fff"/>
+                    <circle cx="345" cy="214" r="1" fill="#fff"/>
+                    <!-- Face -->
+                    <circle cx="345" cy="196" r="7" fill="#ffd9b8"/>
+                    <!-- Eyes -->
+                    <circle cx="342" cy="195" r="1.2" fill="#222"/>
+                    <circle cx="348" cy="195" r="1.2" fill="#222"/>
+                    <!-- Smile -->
+                    <path d="M 342 199 Q 345 201 348 199" stroke="#222" stroke-width="0.6" fill="none"/>
+                    <!-- Cheeks -->
+                    <circle cx="340" cy="198" r="1.5" fill="#ffb88c" opacity="0.6"/>
+                    <circle cx="350" cy="198" r="1.5" fill="#ffb88c" opacity="0.6"/>
+                    <!-- Right hand (with utensil) -->
+                    <ellipse cx="325" cy="208" rx="5" ry="4" fill="#ffd9b8"/>
+                    <!-- Arm -->
+                    <path d="M 335 205 Q 328 205 325 208" stroke="#ffd9b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <!-- Utensil (spatula) -->
+                    <g id="chefUtensil">
+                        <rect x="312" y="200" width="2" height="16" fill="#8a5a2a" rx="0.5"/>
+                        <ellipse cx="313" cy="198" rx="5" ry="7" fill="#c8c8d8" stroke="#888" stroke-width="0.5"/>
+                    </g>
+                    <!-- Left hand -->
+                    <ellipse cx="365" cy="210" rx="4" ry="3.5" fill="#ffd9b8"/>
+                    <path d="M 355 208 Q 362 208 365 210" stroke="#ffd9b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </g>
+
+                <!-- Ambient light overlay -->
+                <ellipse cx="200" cy="212" rx="150" ry="60" fill="url(#flameGrad)" opacity="0.15" id="ambientGlow"/>
+            </svg>
 
             <!-- HUD -->
             <div class="sim-hud">
@@ -1263,19 +1298,30 @@
         <!-- SIM CONTROLS -->
         <div class="sim-status">
             <span class="pulse-dot" id="pulseDot" style="display:none"></span>
-            <span id="simStatusText">Nhấn "Bắt đầu nấu" để AI thao tác trong bếp 3D</span>
+            <span id="simStatusText">Nhấn "Bắt đầu nấu" để AI thao tác trong bếp</span>
         </div>
         <div class="sim-progress">
             <div class="sim-progress-fill" id="simProgress"></div>
         </div>
-        <div class="sim-controls" style="margin-bottom:16px;">
+        <div class="sim-controls" style="margin-bottom:14px;">
             <button class="sim-btn primary" id="simStartBtn">▶ Bắt đầu nấu</button>
             <button class="sim-btn speed-btn" id="simSpeedBtn">1x</button>
             <button class="sim-btn speed-btn" id="simResetBtn">↻</button>
         </div>
 
+        <!-- SUBSTITUTES -->
+        <div class="section-title">🔄 Nguyên liệu thay thế</div>
+        <div class="substitutes-box" id="substitutesBox">
+            <div class="sub-title">💡 Nếu thiếu, bạn có thể thay thế:</div>
+            <div id="substitutesList"></div>
+        </div>
+
+        <!-- TIPS -->
+        <div class="section-title">👨‍🍳 Mẹo đầu bếp</div>
+        <div class="tips-box" id="tipsBox"></div>
+
         <!-- STEPS -->
-        <div class="section-title">👨‍🍳 Các bước thực hiện</div>
+        <div class="section-title">📝 Các bước thực hiện</div>
         <div class="steps-container" id="stepsContainer"></div>
 
         <!-- ACTIONS -->
@@ -1322,26 +1368,40 @@
         particlesEl.appendChild(p);
     }
 
-    // ========== FOOD DATABASE - ULTIMATE với ĐỊNH LƯỢNG CHI TIẾT ==========
+    // ========== FOOD DATABASE - 40+ MÓN, DINH DƯỠNG CHUẨN VN ==========
+    // Nguồn dinh dưỡng: Bảng thành phần dinh dưỡng thực phẩm VN 2017
     const foodDB = [
         {
             name: "Phở bò", emoji: "🍜",
-            tags: ["món nước","món việt","bò","phở","sáng","nước","nóng","đầy đủ"],
-            desc: "Nước dùng thanh ngọt, bánh phở mềm, thịt bò tái. Tuyệt vời cho bữa sáng.",
-            time: 45, kcal: 450, servings: 2,
+            tags: ["món nước","món việt","bò","phở","sáng","nước","nóng"],
+            desc: "Nước dùng thanh ngọt từ xương bò, bánh phở mềm, thịt bò tái.",
+            time: 45, kcal: 480, servings: 2,
             ingredients: [
-                { icon: "🍜", name: "Bánh phở tươi", qty: 400, unit: "g", note: "sợi to bản" },
-                { icon: "🥩", name: "Thịt bò (gầu + nạm)", qty: 300, unit: "g", note: "thái mỏng" },
-                { icon: "🦴", name: "Xương ống bò", qty: 1.5, unit: "kg", note: "chần sơ trước" },
-                { icon: "🫚", name: "Gừng + Quế + Hồi", qty: 1, unit: "nhánh", note: "nướng thơm" },
+                { icon: "🍜", name: "Bánh phở tươi", qty: 400, unit: "g", note: "sợi to 5mm" },
+                { icon: "🥩", name: "Thịt bò (gầu + nạm)", qty: 250, unit: "g", note: "thái mỏng 2mm" },
+                { icon: "🦴", name: "Xương ống bò", qty: 1.5, unit: "kg", note: "chần sơ qua nước sôi" },
+                { icon: "🫚", name: "Gừng + Quế + Hồi", qty: 1, unit: "nhánh", note: "nướng thơm trước" },
                 { icon: "🧅", name: "Hành tây", qty: 2, unit: "củ", note: "nướng cháy vỏ" },
-                { icon: "🌿", name: "Ngò gai + Húng quế", qty: 100, unit: "g", note: "rau sống" },
-                { icon: "🌶️", name: "Ớt tươi + Chanh", qty: 2, unit: "trái", note: "tùy khẩu vị" },
-                { icon: "🧂", name: "Nước mắm ngon", qty: 3, unit: "muỗng", note: "loại 40 độ đạm" }
+                { icon: "🌿", name: "Ngò gai + Húng quế", qty: 100, unit: "g", note: "rửa sạch, để ráo" },
+                { icon: "🌶️", name: "Ớt tươi + Chanh", qty: 2, unit: "trái", note: "cắt lát mỏng" },
+                { icon: "🧂", name: "Nước mắm ngon", qty: 3, unit: "muỗng canh", note: "loại 40 độ đạm" }
             ],
-            nutrition: { protein: 28, carb: 52, fat: 14, fiber: 4 },
+            nutrition: { protein: 32, carb: 58, fat: 12, fiber: 3.5, sodium: 1200 },
+            substitutes: [
+                "Xương bò → Xương heo hoặc xương gà (vị ngọt nhẹ hơn)",
+                "Bánh phở tươi → Bánh phở khô (ngâm nước ấm 20 phút trước)",
+                "Gầu bò → Nạm bò hoặc thịt bắp bò (mềm hơn)",
+                "Nước mắm → Nước tương + chút đường (cho người ăn chay)"
+            ],
+            tips: [
+                "Chần xương bò qua nước sôi rồi rửa sạch để nước dùng trong, không tanh",
+                "Nướng gừng, hành tây, quế, hồi trước khi ninh để dậy mùi thơm đặc trưng",
+                "Hớt bọt liên tục trong 30 phút đầu để nước dùng trong vắt",
+                "Thịt bò để ngăn đông 20 phút trước khi thái sẽ mỏng và đẹp hơn",
+                "Chan nước dùng thật sôi (100°C) để thịt bò tái chín đúng độ"
+            ],
             steps: [
-                { title: "Ninh xương bò 2 giờ", time: "120 phút", desc: "Chần xương bò qua nước sôi, rửa sạch. Ninh với gừng nướng, quế, hồi, hành tây nướng trong 2 giờ. Hớt bọt liên tục để nước trong." },
+                { title: "Ninh xương bò 2 giờ", time: "120 phút", desc: "Chần xương qua nước sôi 2 phút, rửa sạch. Ninh với gừng nướng, quế, hồi, hành tây nướng trong 2 giờ. Hớt bọt liên tục." },
                 { title: "Sơ chế thịt bò", time: "15 phút", desc: "Thịt bò để ngăn đông 20 phút cho dễ thái. Thái mỏng 2mm. Ướp chút muối tiêu, dầu ăn." },
                 { title: "Trụng bánh phở & xếp tô", time: "3 phút", desc: "Đun nước sôi, trụng bánh phở 10 giây. Xếp bánh phở vào tô, để thịt bò tái lên trên." },
                 { title: "Chan nước dùng sôi", time: "2 phút", desc: "Đun nước dùng thật sôi, nêm nước mắm, muối, đường phèn. Chan ngập tô để thịt bò chín tái." },
@@ -1351,19 +1411,32 @@
         {
             name: "Bún chả Hà Nội", emoji: "🍢",
             tags: ["món việt","bún","thịt nướng","hà nội","trưa","khô"],
-            desc: "Chả viên nướng thơm, nước mắm chua ngọt, ăn kèm bún và rau sống.",
-            time: 40, kcal: 520, servings: 3,
+            desc: "Chả viên nướng than hoa thơm lừng, nước mắm chua ngọt, ăn kèm bún và rau sống.",
+            time: 40, kcal: 540, servings: 3,
             ingredients: [
                 { icon: "🍜", name: "Bún tươi", qty: 600, unit: "g", note: "sợi nhỏ" },
-                { icon: "🥩", name: "Thịt heo băm", qty: 300, unit: "g", note: "nạc vai" },
-                { icon: "🥓", name: "Thịt ba chỉ", qty: 400, unit: "g", note: "thái lát mỏng" },
+                { icon: "🥩", name: "Thịt heo băm (nạc vai)", qty: 300, unit: "g", note: "xay 2 lần" },
+                { icon: "🥓", name: "Thịt ba chỉ", qty: 400, unit: "g", note: "thái lát 3mm" },
                 { icon: "🧄", name: "Tỏi + Hành tím", qty: 4, unit: "tép", note: "băm nhuyễn" },
                 { icon: "🌶️", name: "Ớt tươi", qty: 3, unit: "trái", note: "băm nhỏ" },
-                { icon: "🌿", name: "Rau sống (xà lách, tía tô)", qty: 200, unit: "g", note: "rửa sạch" },
-                { icon: "🍯", name: "Nước mắm + Đường", qty: 4, unit: "muỗng", note: "tỉ lệ 3:2:1" },
+                { icon: "🌿", name: "Rau sống (xà lách, tía tô)", qty: 200, unit: "g", note: "rửa sạch, ngâm muối" },
+                { icon: "🍯", name: "Nước mắm + Đường", qty: 4, unit: "muỗng canh", note: "tỉ lệ 3:2:1" },
                 { icon: "🥕", name: "Cà rốt + Củ cải", qty: 1, unit: "củ", note: "ngâm chua ngọt" }
             ],
-            nutrition: { protein: 24, carb: 58, fat: 18, fiber: 3 },
+            nutrition: { protein: 28, carb: 62, fat: 22, fiber: 4, sodium: 1450 },
+            substitutes: [
+                "Ba chỉ → Thịt vai heo (ít mỡ hơn)",
+                "Nước mắm → Nước tương (cho người ăn chay)",
+                "Bún tươi → Bún khô (trụng nước sôi 5 phút)",
+                "Rau sống → Bắp cải thái sợi + dưa leo"
+            ],
+            tips: [
+                "Ướp thịt với nước mắm, đường, tỏi, hành tím ít nhất 20 phút để ngấm đều",
+                "Nướng chả trên than hoa sẽ thơm hơn nướng lò, trở đều 2 mặt",
+                "Pha nước mắm theo tỉ lệ 3 mắm : 2 đường : 1 chanh : 5 nước",
+                "Thêm đu đủ ngâm vào nước mắm để tăng vị chua ngọt tự nhiên",
+                "Chả viên dẹt khoảng 1cm để chín đều và nhanh"
+            ],
             steps: [
                 { title: "Ướp thịt 20 phút", time: "20 phút", desc: "Thịt băm + ba chỉ ướp nước mắm, đường, tỏi, hành tím, tiêu. Trộn đều, để ngấm." },
                 { title: "Nặn chả viên", time: "10 phút", desc: "Nặn thịt băm thành viên nhỏ dẹt 3cm. Ba chỉ thái lát mỏng 2mm." },
@@ -1376,18 +1449,31 @@
             name: "Cơm tấm sườn", emoji: "🍚",
             tags: ["món việt","cơm","sườn","trưa","tối","sài gòn"],
             desc: "Sườn nướng mật ong, cơm tấm bì, ăn kèm nước mắm chua ngọt.",
-            time: 35, kcal: 650, servings: 2,
+            time: 35, kcal: 680, servings: 2,
             ingredients: [
-                { icon: "🍚", name: "Gạo tấm", qty: 300, unit: "g", note: "vo nhẹ" },
-                { icon: "🥓", name: "Sườn cốt lết", qty: 400, unit: "g", note: "đập mềm" },
-                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "ốp la" },
-                { icon: "🌿", name: "Mỡ hành + Hành phi", qty: 3, unit: "muỗng", note: "thơm" },
-                { icon: "🍯", name: "Mật ong", qty: 2, unit: "muỗng", note: "pha nước ấm" },
+                { icon: "🍚", name: "Gạo tấm", qty: 300, unit: "g", note: "vo nhẹ, không chà" },
+                { icon: "🥓", name: "Sườn cốt lết", qty: 400, unit: "g", note: "đập mềm 2 mặt" },
+                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "ốp la lòng đào" },
+                { icon: "🌿", name: "Mỡ hành + Hành phi", qty: 3, unit: "muỗng canh", note: "thơm vàng" },
+                { icon: "🍯", name: "Mật ong", qty: 2, unit: "muỗng canh", note: "pha nước ấm" },
                 { icon: "🧄", name: "Tỏi + Sả băm", qty: 3, unit: "tép", note: "ướp sườn" },
-                { icon: "🥒", name: "Dưa leo + Cà chua", qty: 1, unit: "trái", note: "cắt lát" },
-                { icon: "🍯", name: "Nước mắm chua ngọt", qty: 4, unit: "muỗng", note: "pha sẵn" }
+                { icon: "🥒", name: "Dưa leo + Cà chua", qty: 1, unit: "trái", note: "cắt lát mỏng" },
+                { icon: "🍯", name: "Nước mắm chua ngọt", qty: 4, unit: "muỗng canh", note: "đã pha sẵn" }
             ],
-            nutrition: { protein: 32, carb: 72, fat: 22, fiber: 3 },
+            nutrition: { protein: 38, carb: 76, fat: 24, fiber: 3, sodium: 1380 },
+            substitutes: [
+                "Gạo tấm → Gạo thường (vo kỹ, nấu ít nước hơn)",
+                "Sườn cốt lết → Sườn non hoặc thịt đùi heo",
+                "Mật ong → Đường nâu + chút nước",
+                "Mỡ hành → Dầu ăn + hành lá phi thơm"
+            ],
+            tips: [
+                "Đập sườn qua 2 mặt giúp thịt mềm và thấm gia vị đều",
+                "Ướp sườn ít nhất 30 phút, tốt nhất 2 giờ trong ngăn mát",
+                "Nướng sườn trên than hồng, quét mật ong 2 lần để bóng đẹp",
+                "Nấu cơm tấm với nước dừa tươi sẽ thơm và dẻo hơn",
+                "Chiên trứng ốp la lửa vừa, lòng đỏ còn lỏng mới ngon"
+            ],
             steps: [
                 { title: "Ướp sườn 30 phút", time: "30 phút", desc: "Sườn đập mềm, ướp mật ong, nước mắm, tỏi, sả, tiêu, dầu ăn. Để ngấm." },
                 { title: "Nấu cơm tấm", time: "20 phút", desc: "Vo gạo tấm sạch, nấu với nước dừa tươi + chút muối cho thơm dẻo." },
@@ -1399,19 +1485,32 @@
         {
             name: "Thịt kho trứng", emoji: "🥚",
             tags: ["món việt","thịt heo","trứng","kho","tối","cơm"],
-            desc: "Thịt ba chỉ kho mềm, trứng vịt thấm vị, ăn với cơm trắng rất ngon.",
-            time: 60, kcal: 580, servings: 4,
+            desc: "Thịt ba chỉ kho mềm rục, trứng vịt thấm vị đậm đà.",
+            time: 60, kcal: 620, servings: 4,
             ingredients: [
                 { icon: "🥓", name: "Thịt ba chỉ", qty: 800, unit: "g", note: "cắt khối 4cm" },
-                { icon: "🥚", name: "Trứng vịt", qty: 6, unit: "quả", note: "luộc chín" },
-                { icon: "🥥", name: "Nước dừa tươi", qty: 500, unit: "ml", note: "loại tươi" },
-                { icon: "🍬", name: "Đường thốt nốt", qty: 50, unit: "g", note: "thắng màu" },
-                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng", note: "40 độ đạm" },
+                { icon: "🥚", name: "Trứng vịt", qty: 6, unit: "quả", note: "luộc chín, bóc vỏ" },
+                { icon: "🥥", name: "Nước dừa tươi", qty: 500, unit: "ml", note: "loại dừa xiêm" },
+                { icon: "🍬", name: "Đường thốt nốt", qty: 50, unit: "g", note: "thắng nước màu" },
+                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng canh", note: "40 độ đạm" },
                 { icon: "🧄", name: "Hành tím + Tỏi", qty: 5, unit: "tép", note: "băm nhuyễn" },
-                { icon: "🌶️", name: "Ớt hiểm", qty: 2, unit: "trái", note: "nguyên trái" },
-                { icon: "🧂", name: "Muối + Tiêu", qty: 1, unit: "muỗng", note: "nêm vừa" }
+                { icon: "🌶️", name: "Ớt hiểm", qty: 2, unit: "trái", note: "để nguyên trái" },
+                { icon: "🧂", name: "Muối + Tiêu", qty: 1, unit: "muỗng cà phê", note: "nêm vừa" }
             ],
-            nutrition: { protein: 26, carb: 24, fat: 38, fiber: 2 },
+            nutrition: { protein: 30, carb: 26, fat: 42, fiber: 1.5, sodium: 1650 },
+            substitutes: [
+                "Trứng vịt → Trứng gà (nhỏ hơn, dùng 8 quả)",
+                "Nước dừa tươi → Nước lọc + 2 muỗng đường",
+                "Đường thốt nốt → Đường vàng hoặc đường trắng",
+                "Ba chỉ → Thịt nách hoặc thịt vai (ít mỡ hơn)"
+            ],
+            tips: [
+                "Thắng đường đến màu cánh gián (không quá đen) để nước kho có màu đẹp",
+                "Trụng thịt qua nước sôi 2 phút để loại bỏ tạp chất và mùi hôi",
+                "Kho lửa nhỏ liu riu, đậy nắp, để thịt mềm từ từ",
+                "Thêm trứng vào 10 phút cuối để trứng không bị cứng",
+                "Để nguội rồi hâm lại, thịt sẽ càng thấm và ngon hơn"
+            ],
             steps: [
                 { title: "Luộc & bóc trứng", time: "12 phút", desc: "Luộc trứng vịt trong nước sôi 10 phút, vớt ra ngâm nước lạnh, bóc vỏ để riêng." },
                 { title: "Thắng nước màu", time: "5 phút", desc: "Đun đường thốt nốt với 2 muỗng nước, khuấy đều đến khi có màu cánh gián đẹp." },
@@ -1422,20 +1521,33 @@
         },
         {
             name: "Đậu hũ sốt cà chua", emoji: "🍅",
-            tags: ["món chay","đậu hũ","cà chua","dễ nấu","cơm","chay"],
-            desc: "Đậu hũ chiên vàng, sốt cà chua chua ngọt, ăn với cơm trắng.",
-            time: 20, kcal: 280, servings: 3,
+            tags: ["món chay","đậu hũ","cà chua","dễ nấu","cơm","chay","healthy"],
+            desc: "Đậu hũ chiên vàng, sốt cà chua chua ngọt đậm đà.",
+            time: 20, kcal: 290, servings: 3,
             ingredients: [
-                { icon: "🧊", name: "Đậu hũ non", qty: 4, unit: "miếng", note: "cắt vuông" },
+                { icon: "🧊", name: "Đậu hũ non", qty: 4, unit: "miếng", note: "cắt vuông 3cm" },
                 { icon: "🍅", name: "Cà chua chín", qty: 3, unit: "trái", note: "băm nhuyễn" },
                 { icon: "🌿", name: "Hành lá", qty: 3, unit: "nhánh", note: "cắt nhỏ" },
                 { icon: "🧄", name: "Tỏi băm", qty: 3, unit: "tép", note: "phi thơm" },
-                { icon: "🥫", name: "Nước tương", qty: 2, unit: "muỗng", note: "loại ngon" },
-                { icon: "🍬", name: "Đường + Muối", qty: 1, unit: "muỗng", note: "nêm vừa" },
-                { icon: "🌽", name: "Bột năng", qty: 1, unit: "muỗng", note: "pha nước" },
-                { icon: "🫒", name: "Dầu ăn", qty: 3, unit: "muỗng", note: "chiên đậu" }
+                { icon: "🥫", name: "Nước tương", qty: 2, unit: "muỗng canh", note: "loại ngon" },
+                { icon: "🍬", name: "Đường + Muối", qty: 1, unit: "muỗng cà phê", note: "nêm vừa" },
+                { icon: "🌽", name: "Bột năng", qty: 1, unit: "muỗng canh", note: "pha với nước" },
+                { icon: "🫒", name: "Dầu ăn", qty: 3, unit: "muỗng canh", note: "chiên đậu" }
             ],
-            nutrition: { protein: 18, carb: 22, fat: 14, fiber: 6 },
+            nutrition: { protein: 20, carb: 24, fat: 14, fiber: 6, sodium: 720 },
+            substitutes: [
+                "Đậu hũ non → Đậu hũ cứng (chiên giòn hơn)",
+                "Nước tương → Nước mắm chay hoặc muối",
+                "Bột năng → Bột bắp (tỉ lệ tương tự)",
+                "Cà chua tươi → Sốt cà chua đóng hộp (dùng 4 muỗng)"
+            ],
+            tips: [
+                "Chiên đậu hũ trên lửa vừa, không đảo nhiều để đậu không vỡ",
+                "Cho chút muối vào cà chua khi xào sẽ nhanh mềm và ra nước",
+                "Pha bột năng với nước lạnh trước, đổ từ từ để không bị vón",
+                "Cho đậu vào sốt sau cùng, đảo nhẹ tay để giữ miếng đậu nguyên vẹn",
+                "Rắc hành lá và tiêu sau khi tắt bếp để giữ mùi thơm"
+            ],
             steps: [
                 { title: "Chiên đậu hũ vàng", time: "8 phút", desc: "Đậu hũ cắt miếng vuông 3cm, chiên ngập dầu đến khi vàng đều 4 mặt. Vớt ra giấy thấm dầu." },
                 { title: "Xào cà chua nhuyễn", time: "5 phút", desc: "Phi tỏi thơm với dầu, cho cà chua băm vào xào nhuyễn, thêm chút muối cho mau mềm." },
@@ -1447,16 +1559,29 @@
         {
             name: "Trứng ốp la", emoji: "🍳",
             tags: ["sáng","trứng","nhanh","bánh mì"],
-            desc: "Trứng ốp la với hành, ăn kèm bánh mì hoặc cơm.",
-            time: 8, kcal: 220, servings: 1,
+            desc: "Trứng ốp la với hành lá, ăn kèm bánh mì hoặc cơm.",
+            time: 8, kcal: 240, servings: 1,
             ingredients: [
-                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "loại tươi" },
+                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "loại tươi, vỏ sạch" },
                 { icon: "🌿", name: "Hành lá", qty: 2, unit: "nhánh", note: "cắt nhỏ" },
-                { icon: "🫒", name: "Dầu ăn", qty: 1, unit: "muỗng", note: "đủ nóng" },
+                { icon: "🫒", name: "Dầu ăn", qty: 1, unit: "muỗng canh", note: "đun nóng già" },
                 { icon: "🥖", name: "Bánh mì", qty: 1, unit: "ổ", note: "nướng giòn" },
                 { icon: "🧂", name: "Muối + Tiêu", qty: 1, unit: "nhúm", note: "nêm vừa" }
             ],
-            nutrition: { protein: 14, carb: 4, fat: 16, fiber: 1 },
+            nutrition: { protein: 15, carb: 6, fat: 17, fiber: 1, sodium: 380 },
+            substitutes: [
+                "Trứng gà → Trứng vịt (1 quả vịt = 1.5 gà)",
+                "Bánh mì → Cơm trắng hoặc khoai tây nghiền",
+                "Dầu ăn → Bơ (thơm hơn, cho trứng vàng đẹp)",
+                "Hành lá → Ngò rí hoặc hành tây"
+            ],
+            tips: [
+                "Đun dầu thật nóng già trước khi đập trứng để viền giòn",
+                "Đập trứng vào bát nhỏ rồi trượt nhẹ vào chảo để không vỡ lòng đỏ",
+                "Chiên lửa vừa, đậy nắp 30 giây để lòng đỏ chín đều",
+                "Rắc tiêu và hành lá sau khi tắt bếp để giữ hương thơm",
+                "Ăn kèm bánh mì nướng giòn, thêm nước tương hoặc maggi"
+            ],
             steps: [
                 { title: "Đun nóng chảo", time: "2 phút", desc: "Cho dầu ăn vào chảo, đun nóng già để trứng không dính và viền giòn." },
                 { title: "Đập trứng vào chảo", time: "1 phút", desc: "Đập trứng nhẹ tay, để lòng đỏ nguyên vẹn. Rắc muối tiêu." },
@@ -1468,18 +1593,31 @@
         {
             name: "Bò lúc lắc", emoji: "🥩",
             tags: ["bò","xào","lúc lắc","cơm","tối"],
-            desc: "Bò mềm xào cùng hành tây, ớt chuông, ăn kèm cơm hoặc khoai tây.",
-            time: 25, kcal: 480, servings: 2,
+            desc: "Bò mềm xào cùng hành tây, ớt chuông, thơm lừng.",
+            time: 25, kcal: 510, servings: 2,
             ingredients: [
-                { icon: "🥩", name: "Thăn bò", qty: 400, unit: "g", note: "khối 2cm" },
-                { icon: "🧅", name: "Hành tây", qty: 1, unit: "củ", note: "khối vuông" },
-                { icon: "🫑", name: "Ớt chuông đỏ + xanh", qty: 2, unit: "trái", note: "khối vuông" },
+                { icon: "🥩", name: "Thăn bò", qty: 400, unit: "g", note: "khối vuông 2cm" },
+                { icon: "🧅", name: "Hành tây", qty: 1, unit: "củ", note: "khối vuông 2cm" },
+                { icon: "🫑", name: "Ớt chuông đỏ + xanh", qty: 2, unit: "trái", note: "khối vuông 2cm" },
                 { icon: "🧄", name: "Tỏi băm", qty: 4, unit: "tép", note: "phi thơm" },
-                { icon: "🥫", name: "Dầu hào", qty: 2, unit: "muỗng", note: "ướp bò" },
-                { icon: "🍬", name: "Đường + Tiêu", qty: 1, unit: "muỗng", note: "nêm vừa" },
-                { icon: "🫒", name: "Dầu ăn + Bơ", qty: 2, unit: "muỗng", note: "xào bò" }
+                { icon: "🥫", name: "Dầu hào", qty: 2, unit: "muỗng canh", note: "ướp bò" },
+                { icon: "🍬", name: "Đường + Tiêu", qty: 1, unit: "muỗng cà phê", note: "nêm vừa" },
+                { icon: "🫒", name: "Dầu ăn + Bơ", qty: 2, unit: "muỗng canh", note: "xào bò" }
             ],
-            nutrition: { protein: 36, carb: 16, fat: 26, fiber: 3 },
+            nutrition: { protein: 40, carb: 18, fat: 28, fiber: 3, sodium: 880 },
+            substitutes: [
+                "Thăn bò → Bắp bò hoặc thịt đùi bò (rẻ hơn)",
+                "Dầu hào → Nước tương + đường + tỏi",
+                "Bơ → Dầu ăn thường (không thơm bằng)",
+                "Ớt chuông → Cà rốt thái khối hoặc đậu Hà Lan"
+            ],
+            tips: [
+                "Bò phải khô ráo khi ướp, không để nước để áo gia vị đều",
+                "Chảo phải thật nóng trước khi cho bò vào, xào nhanh tay 2 phút",
+                "Không xào bò quá lâu sẽ dai và mất vị ngọt",
+                "Cho bơ vào cuối để tạo mùi thơm đặc trưng",
+                "Ăn kèm khoai tây chiên và rau sống là chuẩn vị"
+            ],
             steps: [
                 { title: "Ướp bò 10 phút", time: "10 phút", desc: "Bò cắt khối vuông 2cm, ướp dầu hào, tỏi băm, tiêu, chút đường và dầu ăn. Trộn đều." },
                 { title: "Sơ chế rau củ", time: "5 phút", desc: "Hành tây, ớt chuông cắt khối vuông đều 2cm bằng thịt bò để trình bày đẹp." },
@@ -1491,17 +1629,30 @@
         {
             name: "Tôm rang muối", emoji: "🦐",
             tags: ["tôm","rang","muối","cơm","tối","hải sản"],
-            desc: "Tôm tươi rang muối hạt, vỏ giòn, thịt ngọt.",
-            time: 20, kcal: 320, servings: 3,
+            desc: "Tôm tươi rang muối hạt, vỏ giòn, thịt ngọt đậm đà.",
+            time: 20, kcal: 340, servings: 3,
             ingredients: [
-                { icon: "🦐", name: "Tôm sú tươi", qty: 500, unit: "g", note: "còn vỏ" },
-                { icon: "🧂", name: "Muối hạt to", qty: 2, unit: "muỗng", note: "rang chung" },
+                { icon: "🦐", name: "Tôm sú tươi", qty: 500, unit: "g", note: "còn vỏ, cắt râu" },
+                { icon: "🧂", name: "Muối hạt to", qty: 2, unit: "muỗng canh", note: "rang chung với tôm" },
                 { icon: "🧄", name: "Tỏi băm", qty: 4, unit: "tép", note: "phi thơm" },
                 { icon: "🌶️", name: "Ớt băm + Tiêu", qty: 2, unit: "trái", note: "tùy khẩu vị" },
-                { icon: "🫒", name: "Dầu ăn", qty: 2, unit: "muỗng", note: "đủ rang" },
-                { icon: "🍬", name: "Đường", qty: 1, unit: "muỗng", note: "cân vị" }
+                { icon: "🫒", name: "Dầu ăn", qty: 2, unit: "muỗng canh", note: "đủ rang" },
+                { icon: "🍬", name: "Đường", qty: 1, unit: "muỗng cà phê", note: "cân vị" }
             ],
-            nutrition: { protein: 30, carb: 8, fat: 14, fiber: 1 },
+            nutrition: { protein: 34, carb: 9, fat: 15, fiber: 1, sodium: 1520 },
+            substitutes: [
+                "Tôm sú → Tôm thẻ hoặc tôm càng (thời gian rang lâu hơn)",
+                "Muối hạt → Muối tinh (dùng 1.5 muỗng)",
+                "Ớt tươi → Ớt bột (dùng 1/2 muỗng)",
+                "Dầu ăn → Bơ (thơm hơn, ít dùng hơn)"
+            ],
+            tips: [
+                "Tôm phải thật ráo nước trước khi rang để vỏ giòn",
+                "Rang muối hạt với tỏi ớt trước để dậy mùi thơm",
+                "Rang lửa vừa, đảo đều tay để tôm chín vàng đều",
+                "Nêm chút đường để cân bằng vị mặn của muối",
+                "Rắc hành lá và ớt tươi sau khi tắt bếp"
+            ],
             steps: [
                 { title: "Sơ chế tôm", time: "5 phút", desc: "Tôm rửa sạch, cắt râu, chừa vỏ. Để ráo nước. Ướp chút muối tiêu." },
                 { title: "Rang muối hạt", time: "3 phút", desc: "Rang muối hạt với tỏi băm, ớt băm trên lửa nhỏ cho thơm vàng." },
@@ -1513,19 +1664,32 @@
         {
             name: "Gà chiên nước mắm", emoji: "🍗",
             tags: ["gà","chiên","nước mắm","cơm","tối"],
-            desc: "Gà chiên giòn rồi xóc nước mắm tỏi ớt, đậm vị.",
-            time: 40, kcal: 520, servings: 3,
+            desc: "Gà chiên giòn rồi xóc nước mắm tỏi ớt, đậm vị khó quên.",
+            time: 40, kcal: 560, servings: 3,
             ingredients: [
-                { icon: "🍗", name: "Gà ta (đùi + cánh)", qty: 800, unit: "g", note: "chặt miếng" },
-                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng", note: "loại 40 độ" },
+                { icon: "🍗", name: "Gà ta (đùi + cánh)", qty: 800, unit: "g", note: "chặt miếng vừa ăn" },
+                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng canh", note: "loại 40 độ đạm" },
                 { icon: "🧄", name: "Tỏi băm", qty: 5, unit: "tép", note: "chia 2 phần" },
                 { icon: "🌶️", name: "Ớt băm", qty: 3, unit: "trái", note: "tùy khẩu vị" },
-                { icon: "🍬", name: "Đường", qty: 2, unit: "muỗng", note: "cân vị" },
+                { icon: "🍬", name: "Đường", qty: 2, unit: "muỗng canh", note: "cân vị" },
                 { icon: "🌾", name: "Bột chiên giòn", qty: 100, unit: "g", note: "áo gà" },
                 { icon: "🫒", name: "Dầu ăn", qty: 300, unit: "ml", note: "chiên ngập" },
                 { icon: "🌿", name: "Hành lá + Ngò", qty: 3, unit: "nhánh", note: "trang trí" }
             ],
-            nutrition: { protein: 34, carb: 18, fat: 30, fiber: 1 },
+            nutrition: { protein: 38, carb: 22, fat: 32, fiber: 1, sodium: 1750 },
+            substitutes: [
+                "Gà ta → Gà công nghiệp (nhanh chín hơn, dùng 600g)",
+                "Nước mắm → Nước tương đậm đặc (cho phiên bản chay)",
+                "Bột chiên giòn → Bột mì + bột bắp (tỉ lệ 1:1)",
+                "Đường → Mật ong (dùng 1.5 muỗng)"
+            ],
+            tips: [
+                "Gà rửa với muối và gừng để khử mùi hôi hiệu quả",
+                "Áo bột mỏng, lắc nhẹ để bột không dày khi chiên",
+                "Chiên 2 lần: lần 1 lửa vừa chín bên trong, lần 2 lửa lớn giòn bên ngoài",
+                "Pha nước mắm với đường theo tỉ lệ 2:1, đun sôi nhẹ cho tan",
+                "Xóc gà với sốt khi sốt còn nóng để bám đều"
+            ],
             steps: [
                 { title: "Sơ chế gà", time: "10 phút", desc: "Gà rửa sạch với muối, chặt miếng vừa ăn. Ướp muối, tiêu, tỏi băm 15 phút." },
                 { title: "Lăn bột chiên", time: "5 phút", desc: "Lăn gà qua bột chiên giòn đều các mặt, lắc nhẹ để bột không dày." },
@@ -1538,24 +1702,367 @@
             name: "Bánh mì thịt", emoji: "🥖",
             tags: ["món việt","bánh mì","sáng","thịt","nhanh"],
             desc: "Bánh mì giòn kẹp thịt nguội, chả, dưa leo, đồ chua.",
-            time: 10, kcal: 400, servings: 1,
+            time: 10, kcal: 420, servings: 1,
             ingredients: [
-                { icon: "🥖", name: "Bánh mì Việt", qty: 1, unit: "ổ", note: "vỏ giòn" },
-                { icon: "🥩", name: "Thịt nguội (chả lụa)", qty: 80, unit: "g", note: "thái lát" },
+                { icon: "🥖", name: "Bánh mì Việt", qty: 1, unit: "ổ", note: "vỏ giòn, ruột mềm" },
+                { icon: "🥩", name: "Thịt nguội (chả lụa)", qty: 80, unit: "g", note: "thái lát mỏng" },
                 { icon: "🥓", name: "Chả lụa", qty: 50, unit: "g", note: "thái lát" },
                 { icon: "🥒", name: "Dưa leo", qty: 0.5, unit: "trái", note: "thái lát dọc" },
                 { icon: "🥕", name: "Đồ chua (cà rốt + củ cải)", qty: 50, unit: "g", note: "ngâm chua ngọt" },
                 { icon: "🌿", name: "Ngò + Ớt", qty: 3, unit: "nhánh", note: "tùy khẩu vị" },
-                { icon: "🥫", name: "Pate gan", qty: 1, unit: "muỗng", note: "phết bánh" },
-                { icon: "🥫", name: "Maggi + Tiêu", qty: 1, unit: "muỗng", note: "tăng vị" }
+                { icon: "🥫", name: "Pate gan", qty: 1, unit: "muỗng canh", note: "phết bánh" },
+                { icon: "🥫", name: "Maggi + Tiêu", qty: 1, unit: "muỗng cà phê", note: "tăng vị" }
             ],
-            nutrition: { protein: 20, carb: 45, fat: 18, fiber: 3 },
+            nutrition: { protein: 22, carb: 48, fat: 20, fiber: 3, sodium: 980 },
+            substitutes: [
+                "Thịt nguội → Thịt xá xíu hoặc thịt heo quay",
+                "Pate gan → Bơ đậu phộng (cho phiên bản chay)",
+                "Đồ chua → Dưa góp hoặc dưa chua",
+                "Maggi → Nước tương"
+            ],
+            tips: [
+                "Nướng bánh mì lửa nhỏ, vỏ giòn nhưng ruột vẫn mềm",
+                "Phết pate mỏng đều để không bị ngấy",
+                "Đồ chua vắt ráo nước để bánh không bị ỉu",
+                "Xếp thịt và rau theo thứ tự: pate → thịt → dưa leo → đồ chua → rau thơm",
+                "Rưới maggi và rắc tiêu trước khi ăn để dậy vị"
+            ],
             steps: [
                 { title: "Nướng bánh mì", time: "3 phút", desc: "Nướng bánh mì trên lửa nhỏ cho vỏ giòn, ruột mềm nóng. Không nướng quá khô." },
                 { title: "Sơ chế rau", time: "2 phút", desc: "Dưa leo thái lát dọc mỏng. Đồ chua (cà rốt, củ cải) thái sợi ngâm sẵn." },
                 { title: "Cắt bánh mì phết pate", time: "1 phút", desc: "Cắt dọc bánh mì không đứt rời. Phết đều pate gan, thêm chút maggi." },
                 { title: "Xếp nhân vào bánh", time: "3 phút", desc: "Xếp thịt nguội, chả lụa, dưa leo, đồ chua, ngò, ớt vào bánh. Đầy đặn." },
                 { title: "Thưởng thức", time: "1 phút", desc: "Rưới chút nước tương hoặc maggi, rắc tiêu. Ăn ngay khi bánh còn nóng giòn." }
+            ]
+        },
+        {
+            name: "Canh chua cá lóc", emoji: "🐟",
+            tags: ["món việt","canh","cá","chua","miền tây","tối","nước","healthy"],
+            desc: "Vị chua thanh từ me, cá lóc tươi ngọt, thơm cà chua và đậu bắp.",
+            time: 30, kcal: 260, servings: 4,
+            ingredients: [
+                { icon: "🐟", name: "Cá lóc tươi", qty: 500, unit: "g", note: "cắt khúc 3cm" },
+                { icon: "🍋", name: "Me chín", qty: 50, unit: "g", note: "ngâm nước ấm, lọc lấy nước" },
+                { icon: "🍅", name: "Cà chua chín", qty: 2, unit: "trái", note: "cắt múi cau" },
+                { icon: "🥒", name: "Đậu bắp", qty: 100, unit: "g", note: "cắt xéo" },
+                { icon: "🍍", name: "Thơm (dứa)", qty: 100, unit: "g", note: "cắt miếng vừa" },
+                { icon: "🌿", name: "Rau nêm (ngò gai, rau om)", qty: 50, unit: "g", note: "cắt nhỏ" },
+                { icon: "🌶️", name: "Ớt tươi", qty: 2, unit: "trái", note: "cắt lát" },
+                { icon: "🧂", name: "Nước mắm + Đường", qty: 2, unit: "muỗng canh", note: "nêm vừa" }
+            ],
+            nutrition: { protein: 26, carb: 16, fat: 8, fiber: 5, sodium: 980 },
+            substitutes: [
+                "Cá lóc → Cá basa, cá rô hoặc cá diêu hồng",
+                "Me chín → Nước cốt me hoặc giấm gạo (2 muỗng)",
+                "Đậu bắp → Đậu que hoặc bông súng",
+                "Thơm → Cà chua xanh (tăng vị chua)"
+            ],
+            tips: [
+                "Cá lóc rửa với muối và chanh để khử tanh hoàn toàn",
+                "Nêm nước me trước, sau đó mới cho cá vào để cá không bị nát",
+                "Đun sôi nước dùng rồi mới thả cá, giữ lửa vừa để cá chín đều",
+                "Cho rau nêm sau cùng, tắt bếp ngay để giữ mùi thơm",
+                "Ăn kèm cơm trắng và nước mắm ớt là chuẩn vị miền Tây"
+            ],
+            steps: [
+                { title: "Sơ chế cá lóc", time: "10 phút", desc: "Cá lóc làm sạch, cắt khúc 3cm, ướp muối tiêu 10 phút. Rửa lại với nước chanh để khử tanh." },
+                { title: "Pha nước me", time: "5 phút", desc: "Me ngâm nước ấm 10 phút, dầm nhuyễn, lọc lấy nước cốt. Bỏ hạt." },
+                { title: "Nấu nước dùng", time: "10 phút", desc: "Đun sôi 1.5L nước, cho nước me, cà chua, thơm, đậu bắp vào. Nêm nước mắm, đường." },
+                { title: "Cho cá vào nấu", time: "8 phút", desc: "Thả cá lóc vào nồi, đun lửa vừa 8 phút đến khi cá chín. Không khuấy mạnh để cá không nát." },
+                { title: "Hoàn thành", time: "2 phút", desc: "Nêm nếm lại chua ngọt vừa ăn. Rắc ngò gai, rau om, ớt lát. Múc ra tô, ăn nóng với cơm." }
+            ]
+        },
+        {
+            name: "Gà kho gừng", emoji: "🍗",
+            tags: ["món việt","gà","kho","gừng","tối","cơm","healthy"],
+            desc: "Gà ta kho gừng thơm nồng, thịt chắc, đậm đà.",
+            time: 45, kcal: 440, servings: 3,
+            ingredients: [
+                { icon: "🍗", name: "Gà ta", qty: 700, unit: "g", note: "chặt miếng vừa" },
+                { icon: "🫚", name: "Gừng tươi", qty: 50, unit: "g", note: "thái sợi nhuyễn" },
+                { icon: "🍯", name: "Nước mắm ngon", qty: 3, unit: "muỗng canh", note: "loại 40 độ đạm" },
+                { icon: "🍬", name: "Đường thốt nốt", qty: 20, unit: "g", note: "tạo màu đẹp" },
+                { icon: "🧄", name: "Hành tím", qty: 3, unit: "củ", note: "băm nhuyễn" },
+                { icon: "🌶️", name: "Tiêu + Ớt", qty: 1, unit: "muỗng cà phê", note: "tùy khẩu vị" },
+                { icon: "🥥", name: "Nước dừa tươi", qty: 200, unit: "ml", note: "tạo vị ngọt tự nhiên" }
+            ],
+            nutrition: { protein: 36, carb: 14, fat: 22, fiber: 1, sodium: 1180 },
+            substitutes: [
+                "Gà ta → Gà công nghiệp (dùng 600g, kho 20 phút)",
+                "Nước dừa → Nước lọc + 1 muỗng đường",
+                "Đường thốt nốt → Đường vàng",
+                "Gừng tươi → Gừng bột (dùng 1 muỗng cà phê)"
+            ],
+            tips: [
+                "Gừng thái sợi nhuyễn sẽ thơm hơn là băm nhỏ",
+                "Ướp gà với gừng 20 phút để thấm đều mùi thơm",
+                "Thắng nước màu từ đường thốt nốt để gà có màu cánh gián đẹp",
+                "Kho lửa nhỏ, đậy nắp để gà mềm mà không bị cháy",
+                "Rắc tiêu và ớt sau khi kho xong để dậy mùi"
+            ],
+            steps: [
+                { title: "Ướp gà với gừng", time: "20 phút", desc: "Gà chặt miếng, ướp nước mắm, đường, gừng sợi, hành tím, tiêu. Trộn đều, để ngấm." },
+                { title: "Thắng nước màu", time: "3 phút", desc: "Đun đường thốt nốt với chút nước đến màu cánh gián. Cho gà vào đảo đều." },
+                { title: "Kho gà lửa nhỏ", time: "25 phút", desc: "Thêm nước dừa, đậy nắp, kho lửa nhỏ 25 phút. Trở gà để thấm đều." },
+                { title: "Nêm nếm lại", time: "3 phút", desc: "Nêm nếm lại vị đậm đà, thêm ớt nếu thích cay. Kho thêm 2 phút cho nước sánh lại." },
+                { title: "Hoàn thành", time: "2 phút", desc: "Rắc tiêu, hành lá. Ăn nóng với cơm trắng và canh rau." }
+            ]
+        },
+        {
+            name: "Bún bò Huế", emoji: "🍲",
+            tags: ["món nước","bún","bò","huế","cay","sáng","nước"],
+            desc: "Nước dùng cay nồng, thịt bò, chả cua, ăn kèm rau sống.",
+            time: 90, kcal: 590, servings: 4,
+            ingredients: [
+                { icon: "🍜", name: "Bún tươi", qty: 800, unit: "g", note: "sợi to" },
+                { icon: "🥩", name: "Bắp bò", qty: 500, unit: "g", note: "thái mỏng" },
+                { icon: "🦀", name: "Chả cua", qty: 200, unit: "g", note: "cắt miếng" },
+                { icon: "🌶️", name: "Sả + Ớt", qty: 4, unit: "nhánh", note: "sả đập dập" },
+                { icon: "🥫", name: "Mắm ruốc", qty: 2, unit: "muỗng canh", note: "loại Huế" },
+                { icon: "🌿", name: "Rau sống (bắp chuối, giá)", qty: 300, unit: "g", note: "rửa sạch" },
+                { icon: "🦴", name: "Xương bò", qty: 1, unit: "kg", note: "ninh nước dùng" },
+                { icon: "🧅", name: "Hành tím + Gừng", qty: 5, unit: "củ", note: "nướng thơm" }
+            ],
+            nutrition: { protein: 36, carb: 66, fat: 18, fiber: 5, sodium: 1680 },
+            substitutes: [
+                "Bắp bò → Nạm bò hoặc gầu bò",
+                "Mắm ruốc → Mắm tôm (đỡ đậm hơn)",
+                "Chả cua → Chả cá thác lác",
+                "Bún tươi → Bún khô (trụng 5 phút)"
+            ],
+            tips: [
+                "Ninh xương bò với sả đập dập để nước dùng thơm đặc trưng",
+                "Mắm ruốc phải hòa tan với nước lọc rồi lọc lại để không bị sạn",
+                "Ớt sa tế nên cho vào sau cùng để giữ màu đỏ đẹp",
+                "Thịt bò thái mỏng, chần qua nước sôi trước khi xếp tô",
+                "Rau sống ăn kèm phải tươi, đặc biệt bắp chuối thái mỏng"
+            ],
+            steps: [
+                { title: "Ninh xương bò 90 phút", time: "90 phút", desc: "Ninh xương bò với sả đập dập, gừng nướng, hành tím nướng trong 90 phút. Hớt bọt liên tục." },
+                { title: "Nêm mắm ruốc", time: "10 phút", desc: "Hòa mắm ruốc với nước, lọc lấy nước trong, cho vào nồi nước dùng. Nêm nếm vừa ăn." },
+                { title: "Sơ chế bò & chả", time: "15 phút", desc: "Bắp bò thái mỏng 2mm, chần qua nước sôi. Chả cua cắt miếng vừa ăn." },
+                { title: "Trụng bún & xếp tô", time: "3 phút", desc: "Trụng bún qua nước sôi, xếp vào tô. Xếp bò, chả cua, hành lá lên trên." },
+                { title: "Chan nước dùng", time: "2 phút", desc: "Chan nước dùng đang sôi lên tô. Thêm ớt sa tế, rau sống. Ăn nóng." }
+            ]
+        },
+        {
+            name: "Gỏi cuốn tôm thịt", emoji: "🌯",
+            tags: ["món việt","cuốn","tôm","thịt","healthy","trưa"],
+            desc: "Bánh tráng cuốn tôm, thịt, bún, rau sống, chấm tương đậu phộng.",
+            time: 35, kcal: 320, servings: 3,
+            ingredients: [
+                { icon: "🌾", name: "Bánh tráng", qty: 12, unit: "tấm", note: "loại mỏng" },
+                { icon: "🦐", name: "Tôm tươi", qty: 300, unit: "g", note: "luộc chín, bóc vỏ" },
+                { icon: "🥓", name: "Thịt ba chỉ", qty: 300, unit: "g", note: "luộc, thái mỏng" },
+                { icon: "🍜", name: "Bún tươi", qty: 200, unit: "g", note: "sợi nhỏ" },
+                { icon: "🥬", name: "Rau sống (xà lách, tía tô, húng)", qty: 200, unit: "g", note: "rửa sạch" },
+                { icon: "🥒", name: "Dưa leo + Cà rốt", qty: 1, unit: "trái", note: "thái sợi" },
+                { icon: "🥜", name: "Tương đậu phộng", qty: 4, unit: "muỗng canh", note: "pha sẵn" },
+                { icon: "🌶️", name: "Ớt + Tỏi", qty: 2, unit: "trái", note: "băm nhỏ" }
+            ],
+            nutrition: { protein: 26, carb: 38, fat: 12, fiber: 5, sodium: 780 },
+            substitutes: [
+                "Tôm tươi → Tôm khô (ngâm nước ấm 20 phút)",
+                "Thịt ba chỉ → Thịt đùi heo hoặc ức gà luộc",
+                "Tương đậu phộng → Tương hột hoặc sốt hoisin",
+                "Bún tươi → Bún khô hoặc miến"
+            ],
+            tips: [
+                "Bánh tráng nhúng nước ấm 2 giây, không ngâm lâu sẽ bị rách",
+                "Trải bánh tráng lên thớt, xếp rau ở dưới, bún và thịt ở trên",
+                "Cuốn chặt tay nhưng nhẹ để bánh không rách",
+                "Tôm luộc chín tới, không quá lâu sẽ dai",
+                "Chấm tương đậu phộng pha thêm chút đường và nước cốt chanh"
+            ],
+            steps: [
+                { title: "Luộc tôm và thịt", time: "15 phút", desc: "Tôm luộc chín, bóc vỏ, chẻ đôi. Thịt ba chỉ luộc chín, thái mỏng. Để nguội." },
+                { title: "Sơ chế rau", time: "8 phút", desc: "Rau sống rửa sạch, ngâm nước muối 5 phút, để ráo. Dưa leo, cà rốt thái sợi." },
+                { title: "Pha tương đậu phộng", time: "5 phút", desc: "Pha tương đậu phộng với nước, đường, nước cốt chanh, tỏi ớt băm. Nêm vừa chua ngọt." },
+                { title: "Cuốn gỏi", time: "10 phút", desc: "Nhúng bánh tráng qua nước ấm, trải ra. Xếp rau, bún, tôm, thịt. Cuốn chặt tay." },
+                { title: "Hoàn thành & thưởng thức", time: "2 phút", desc: "Cắt gỏi cuốn đôi, bày ra đĩa. Chấm tương đậu phộng, ăn kèm rau sống." }
+            ]
+        },
+        {
+            name: "Cơm chiên dương châu", emoji: "🍛",
+            tags: ["cơm","chiên","trứng","tôm","trưa","tối","nhanh"],
+            desc: "Cơm chiên vàng đều, tôm, lạp xưởng, trứng, đậu Hà Lan.",
+            time: 20, kcal: 480, servings: 2,
+            ingredients: [
+                { icon: "🍚", name: "Cơm nguội", qty: 400, unit: "g", note: "để qua đêm" },
+                { icon: "🥚", name: "Trứng gà", qty: 3, unit: "quả", note: "đánh tan" },
+                { icon: "🦐", name: "Tôm tươi", qty: 150, unit: "g", note: "bóc vỏ, cắt nhỏ" },
+                { icon: "🥓", name: "Lạp xưởng", qty: 80, unit: "g", note: "thái hạt lựu" },
+                { icon: "🫛", name: "Đậu Hà Lan", qty: 100, unit: "g", note: "hạt tròn" },
+                { icon: "🥕", name: "Cà rốt", qty: 1, unit: "củ", note: "thái hạt lựu" },
+                { icon: "🌿", name: "Hành lá", qty: 3, unit: "nhánh", note: "cắt nhỏ" },
+                { icon: "🥫", name: "Nước tương + Dầu hào", qty: 2, unit: "muỗng canh", note: "nêm vừa" }
+            ],
+            nutrition: { protein: 24, carb: 62, fat: 16, fiber: 3, sodium: 920 },
+            substitutes: [
+                "Lạp xưởng → Xúc xích hoặc thịt xá xíu",
+                "Tôm tươi → Tôm khô (ngâm 15 phút)",
+                "Đậu Hà Lan → Bắp hạt hoặc đậu que",
+                "Cơm nguội → Cơm mới nấu để nguội 30 phút"
+            ],
+            tips: [
+                "Cơm nguội qua đêm là tốt nhất, không bị dính khi chiên",
+                "Chiên trứng trước, đánh tan rồi cho cơm vào đảo đều tay",
+                "Chiên lửa lớn để cơm vàng giòn, không bị nhão",
+                "Cho nước tương sau cùng để cơm không bị sậm màu",
+                "Đảo đều tay liên tục để cơm không bị cháy"
+            ],
+            steps: [
+                { title: "Sơ chế nguyên liệu", time: "8 phút", desc: "Tôm bóc vỏ cắt nhỏ. Lạp xưởng, cà rốt thái hạt lựu. Đậu Hà Lan rửa sạch. Trứng đánh tan." },
+                { title: "Xào tôm và lạp xưởng", time: "4 phút", desc: "Phi tỏi thơm, xào tôm chín đỏ, cho lạp xưởng vào xào chung. Vớt ra để riêng." },
+                { title: "Chiên trứng và cơm", time: "5 phút", desc: "Cho trứng vào chảo, đánh tan. Cho cơm vào đảo đều tay, chiên lửa lớn cho cơm vàng giòn." },
+                { title: "Trộn nguyên liệu", time: "3 phút", desc: "Cho tôm, lạp xưởng, đậu Hà Lan, cà rốt vào cơm. Nêm nước tương, dầu hào. Đảo đều." },
+                { title: "Hoàn thành", time: "2 phút", desc: "Rắc hành lá, tiêu. Múc ra đĩa, ăn nóng với dưa leo và tương ớt." }
+            ]
+        },
+        {
+            name: "Sườn xào chua ngọt", emoji: "🍖",
+            tags: ["món việt","sườn","xào","chua ngọt","cơm","tối"],
+            desc: "Sườn non xào sốt chua ngọt đậm đà, ăn với cơm trắng.",
+            time: 35, kcal: 520, servings: 3,
+            ingredients: [
+                { icon: "🍖", name: "Sườn non heo", qty: 600, unit: "g", note: "chặt khúc 3cm" },
+                { icon: "🍅", name: "Cà chua", qty: 2, unit: "trái", note: "cắt múi cau" },
+                { icon: "🍍", name: "Thơm (dứa)", qty: 100, unit: "g", note: "cắt miếng vừa" },
+                { icon: "🫑", name: "Ớt chuông xanh + đỏ", qty: 1, unit: "trái", note: "cắt khối" },
+                { icon: "🧄", name: "Tỏi + Hành tím", qty: 4, unit: "tép", note: "băm nhuyễn" },
+                { icon: "🍯", name: "Nước mắm + Đường", qty: 3, unit: "muỗng canh", note: "tỉ lệ 2:1" },
+                { icon: "🥫", name: "Tương cà + Tương ớt", qty: 2, unit: "muỗng canh", note: "tạo màu đẹp" },
+                { icon: "🌽", name: "Bột năng", qty: 1, unit: "muỗng canh", note: "tạo độ sánh" }
+            ],
+            nutrition: { protein: 28, carb: 38, fat: 24, fiber: 3, sodium: 1350 },
+            substitutes: [
+                "Sườn non → Sườn cốt lết (chặt nhỏ hơn)",
+                "Thơm → Xoài xanh hoặc cà chua xanh",
+                "Tương cà → Sốt cà chua đóng hộp",
+                "Bột năng → Bột bắp"
+            ],
+            tips: [
+                "Chần sườn qua nước sôi để loại bỏ tạp chất và mùi hôi",
+                "Chiên sườn sơ trước khi xào để săn thịt, không bị bở",
+                "Pha sốt chua ngọt theo tỉ lệ: 2 mắm : 1 đường : 1 tương cà : 1 tương ớt",
+                "Cho rau củ vào sau cùng để giữ độ giòn",
+                "Pha bột năng với nước lạnh, đổ từ từ để tạo độ sánh"
+            ],
+            steps: [
+                { title: "Sơ chế sườn", time: "10 phút", desc: "Sườn chặt khúc, chần qua nước sôi 3 phút. Rửa sạch, ướp muối tiêu, tỏi 15 phút." },
+                { title: "Chiên sườn sơ", time: "8 phút", desc: "Đun dầu nóng, chiên sườn sơ đến khi vàng đều 2 mặt. Vớt ra để riêng." },
+                { title: "Pha sốt chua ngọt", time: "5 phút", desc: "Pha nước mắm, đường, tương cà, tương ớt, 100ml nước. Đun sôi nhẹ cho tan đường." },
+                { title: "Xào sườn với sốt", time: "8 phút", desc: "Cho sườn vào chảo, đổ sốt vào xào đều. Đun nhỏ lửa 8 phút cho sườn thấm sốt." },
+                { title: "Thêm rau củ & hoàn thành", time: "4 phút", desc: "Cho cà chua, thơm, ớt chuông vào xào 3 phút. Hòa bột năng, đổ vào tạo độ sánh. Rắc tiêu." }
+            ]
+        },
+        {
+            name: "Chả cá thác lác chiên", emoji: "🐠",
+            tags: ["món việt","cá","chiên","cơm","tối"],
+            desc: "Chả cá thác lác dai ngon, chiên vàng giòn, ăn với cơm.",
+            time: 25, kcal: 380, servings: 3,
+            ingredients: [
+                { icon: "🐟", name: "Cá thác lác", qty: 500, unit: "g", note: "quết nhuyễn" },
+                { icon: "🥚", name: "Trứng gà", qty: 1, unit: "quả", note: "lòng đỏ" },
+                { icon: "🧄", name: "Tỏi + Hành tím", qty: 4, unit: "tép", note: "băm nhuyễn" },
+                { icon: "🌿", name: "Hành lá + Ngò", qty: 3, unit: "nhánh", note: "cắt nhỏ" },
+                { icon: "🧂", name: "Nước mắm + Tiêu", qty: 2, unit: "muỗng canh", note: "nêm vừa" },
+                { icon: "🍬", name: "Đường", qty: 1, unit: "muỗng cà phê", note: "cân vị" },
+                { icon: "🫒", name: "Dầu ăn", qty: 200, unit: "ml", note: "chiên ngập" },
+                { icon: "🥒", name: "Dưa leo + Cà chua", qty: 1, unit: "trái", note: "trang trí" }
+            ],
+            nutrition: { protein: 32, carb: 12, fat: 20, fiber: 2, sodium: 920 },
+            substitutes: [
+                "Cá thác lác → Cá rô phi hoặc cá basa (quết nhuyễn)",
+                "Trứng gà → Trứng vịt (tạo độ dai hơn)",
+                "Dầu ăn → Mỡ heo (thơm hơn)",
+                "Nước mắm → Nước tương (cho người ăn chay)"
+            ],
+            tips: [
+                "Quết cá thật kỹ để chả dai và không bị bở",
+                "Ướp cá với nước mắm, tiêu, tỏi 15 phút để thấm",
+                "Chiên lửa vừa, không lật nhiều để chả không vỡ",
+                "Thêm lòng đỏ trứng để chả có màu vàng đẹp",
+                "Ăn kèm nước mắm chua ngọt và dưa leo"
+            ],
+            steps: [
+                { title: "Quết cá", time: "10 phút", desc: "Cá thác lác quết nhuyễn với muối, tiêu. Cho vào tô, thêm trứng, tỏi, hành tím, hành lá. Trộn đều." },
+                { title: "Nêm nếm và ướp", time: "10 phút", desc: "Nêm nước mắm, đường vào hỗn hợp cá. Để ướp 10 phút cho thấm." },
+                { title: "Nặn chả cá", time: "5 phút", desc: "Nặn cá thành miếng tròn dẹt 1cm. Không nặn quá dày để chín đều." },
+                { title: "Chiên chả cá", time: "8 phút", desc: "Đun dầu nóng, chiên chả cá đến khi vàng đều 2 mặt. Vớt ra giấy thấm dầu." },
+                { title: "Hoàn thành", time: "2 phút", desc: "Bày chả cá ra đĩa, trang trí dưa leo, cà chua. Chấm nước mắm chua ngọt." }
+            ]
+        },
+        {
+            name: "Canh bí đỏ thịt bằm", emoji: "🎃",
+            tags: ["món việt","canh","bí đỏ","thịt","tối","nước","healthy"],
+            desc: "Canh bí đỏ ngọt tự nhiên, thịt bằm mềm, thanh mát.",
+            time: 20, kcal: 220, servings: 4,
+            ingredients: [
+                { icon: "🎃", name: "Bí đỏ", qty: 400, unit: "g", note: "gọt vỏ, cắt khối" },
+                { icon: "🥩", name: "Thịt heo băm", qty: 200, unit: "g", note: "nạc vai" },
+                { icon: "🧄", name: "Hành tím", qty: 2, unit: "củ", note: "băm nhuyễn" },
+                { icon: "🌿", name: "Hành lá + Ngò", qty: 3, unit: "nhánh", note: "cắt nhỏ" },
+                { icon: "🧂", name: "Nước mắm + Muối", qty: 1, unit: "muỗng canh", note: "nêm vừa" },
+                { icon: "🌶️", name: "Tiêu", qty: 0.5, unit: "muỗng cà phê", note: "tùy khẩu vị" }
+            ],
+            nutrition: { protein: 16, carb: 18, fat: 8, fiber: 4, sodium: 680 },
+            substitutes: [
+                "Bí đỏ → Bí đao hoặc khoai tây (vị ngọt khác)",
+                "Thịt heo băm → Thịt gà băm hoặc tôm băm",
+                "Nước mắm → Muối (dùng 1/2 muỗng)",
+                "Hành lá → Ngò rí"
+            ],
+            tips: [
+                "Bí đỏ gọt vỏ, cắt khối 3cm để chín đều",
+                "Ướp thịt băm với nước mắm, tiêu 10 phút cho thấm",
+                "Xào thịt sơ với hành tím trước khi nấu canh",
+                "Đun sôi nước rồi mới cho bí vào, giữ lửa vừa",
+                "Rắc hành lá, ngò sau khi tắt bếp để giữ mùi thơm"
+            ],
+            steps: [
+                { title: "Sơ chế nguyên liệu", time: "8 phút", desc: "Bí đỏ gọt vỏ, bỏ hạt, cắt khối 3cm. Thịt băm ướp nước mắm, tiêu, hành tím 10 phút." },
+                { title: "Xào thịt sơ", time: "3 phút", desc: "Phi hành tím thơm, cho thịt băm vào xào săn. Không xào quá lâu để thịt không khô." },
+                { title: "Nấu canh", time: "10 phút", desc: "Đun sôi 1.2L nước, cho thịt băm và bí đỏ vào. Nấu lửa vừa 10 phút đến khi bí mềm." },
+                { title: "Nêm nếm", time: "2 phút", desc: "Nêm nước mắm, muối vừa ăn. Thêm tiêu. Đun thêm 1 phút." },
+                { title: "Hoàn thành", time: "1 phút", desc: "Rắc hành lá, ngò. Múc ra tô, ăn nóng với cơm trắng." }
+            ]
+        },
+        {
+            name: "Bánh xèo miền Tây", emoji: "🥞",
+            tags: ["món việt","bánh","chiên","tôm","thịt","tối"],
+            desc: "Bánh xèo giòn rụm, nhân tôm thịt giá đỗ, chấm nước mắm.",
+            time: 45, kcal: 420, servings: 4,
+            ingredients: [
+                { icon: "🌾", name: "Bột bánh xèo", qty: 400, unit: "g", note: "loại pha sẵn" },
+                { icon: "🥥", name: "Nước cốt dừa", qty: 200, unit: "ml", note: "tạo độ giòn" },
+                { icon: "🦐", name: "Tôm tươi", qty: 200, unit: "g", note: "bóc vỏ, để nguyên con" },
+                { icon: "🥓", name: "Thịt ba chỉ", qty: 200, unit: "g", note: "thái lát mỏng" },
+                { icon: "🫛", name: "Giá đỗ", qty: 200, unit: "g", note: "rửa sạch" },
+                { icon: "🧅", name: "Hành tây", qty: 1, unit: "củ", note: "thái lát mỏng" },
+                { icon: "🌿", name: "Rau sống (xà lách, rau thơm)", qty: 300, unit: "g", note: "rửa sạch" },
+                { icon: "🧂", name: "Nước mắm + Đường", qty: 4, unit: "muỗng canh", note: "pha nước chấm" }
+            ],
+            nutrition: { protein: 22, carb: 52, fat: 18, fiber: 4, sodium: 1120 },
+            substitutes: [
+                "Bột bánh xèo → Bột gạo + bột nghệ + nước cốt dừa",
+                "Tôm tươi → Tôm khô (ngâm 20 phút)",
+                "Thịt ba chỉ → Thịt nạc vai hoặc thịt gà",
+                "Giá đỗ → Củ sắn thái sợi"
+            ],
+            tips: [
+                "Pha bột với nước cốt dừa để bánh giòn và thơm",
+                "Để bột nghỉ 30 phút trước khi đổ bánh",
+                "Chảo phải thật nóng và tráng đều dầu",
+                "Đổ bột mỏng, đậy nắp 1 phút cho bánh chín đều",
+                "Mở nắp, chiên thêm 1 phút cho bánh giòn rụm"
+            ],
+            steps: [
+                { title: "Pha bột bánh xèo", time: "10 phút", desc: "Pha bột với nước cốt dừa, nước lọc theo hướng dẫn. Thêm hành lá cắt nhỏ. Để nghỉ 30 phút." },
+                { title: "Sơ chế nhân", time: "10 phút", desc: "Tôm bóc vỏ, thịt ba chỉ thái mỏng, hành tây thái lát. Xào sơ tôm và thịt với chút gia vị." },
+                { title: "Đổ bánh xèo", time: "15 phút", desc: "Đun chảo nóng, tráng dầu. Múc 1 muỗng bột đổ vào, tráng mỏng. Cho tôm, thịt, giá đỗ, hành tây lên." },
+                { title: "Chiên bánh giòn", time: "10 phút", desc: "Đậy nắp 1 phút cho bánh chín. Mở nắp, chiên thêm 1 phút cho bánh giòn. Gấp đôi bánh." },
+                { title: "Pha nước chấm & thưởng thức", time: "5 phút", desc: "Pha nước mắm chua ngọt với tỏi ớt. Ăn bánh xèo cuốn với rau sống, chấm nước mắm." }
             ]
         }
     ];
@@ -1727,7 +2234,7 @@
                 </div>
                 <div style="font-size:12.5px;margin-bottom:6px;">✨ <b>${foods.length} gợi ý tối ưu</b> cho bạn:</div>
                 <div class="food-cards">${cardsHtml}</div>
-                <div style="margin-top:10px;font-size:10.5px;color:#8a92a8;">💡 Chạm vào món để xem bếp 3D + định lượng + mô phỏng nấu</div>
+                <div style="margin-top:10px;font-size:10.5px;color:#8a92a8;">💡 Chạm vào món để xem bếp thực tế + định lượng + mô phỏng</div>
             </div>
         `;
         chatEl.appendChild(div);
@@ -1755,13 +2262,13 @@
     const stepsContainer = document.getElementById('stepsContainer');
     const modalBtn = document.getElementById('modalBtn');
 
-    // Kitchen sim elements
-    const panContent = document.getElementById('panContent');
-    const pan3D = document.getElementById('pan3D');
-    const fire3D = document.getElementById('fire3D');
-    const steam3D = document.getElementById('steam3D');
-    const stove = document.getElementById('stove');
-    const aiChef = document.getElementById('aiChef');
+    // Sim elements
+    const panGroup = document.getElementById('panGroup');
+    const panFoodEmoji = document.getElementById('panFoodEmoji');
+    const flameGroup = document.getElementById('flameGroup');
+    const steamGroup = document.getElementById('steamGroup');
+    const oilBubbles = document.getElementById('oilBubbles');
+    const chefGroup = document.getElementById('chefGroup');
     const kitchenScene = document.getElementById('kitchenScene');
     const simStatusText = document.getElementById('simStatusText');
     const simProgress = document.getElementById('simProgress');
@@ -1771,6 +2278,8 @@
     const pulseDot = document.getElementById('pulseDot');
     const hudStage = document.getElementById('hudStage');
     const hudTimer = document.getElementById('hudTimer');
+    const substitutesList = document.getElementById('substitutesList');
+    const tipsBox = document.getElementById('tipsBox');
 
     let currentFood = null;
     let currentMatch = 0;
@@ -1814,6 +2323,22 @@
         }).join('');
     }
 
+    function renderSubstitutes() {
+        if (!currentFood || !currentFood.substitutes) {
+            substitutesList.innerHTML = '<div class="sub-item">Không có gợi ý thay thế</div>';
+            return;
+        }
+        substitutesList.innerHTML = currentFood.substitutes.map(s => `<div class="sub-item">${s}</div>`).join('');
+    }
+
+    function renderTips() {
+        if (!currentFood || !currentFood.tips) {
+            tipsBox.innerHTML = '<div class="tip-item">Hãy nấu theo các bước để có món ăn ngon!</div>';
+            return;
+        }
+        tipsBox.innerHTML = currentFood.tips.map(t => `<div class="tip-item">${t}</div>`).join('');
+    }
+
     function openModal(food, matchPercent) {
         currentFood = food;
         currentMatch = matchPercent;
@@ -1829,19 +2354,24 @@
         modalTags.innerHTML = food.tags.slice(0, 4).map(t => `<span class="modal-tag">#${t}</span>`).join('');
 
         renderIngredients();
+        renderSubstitutes();
+        renderTips();
 
-        // Nutrition
+        // Nutrition with sodium
         const n = food.nutrition;
         const maxN = Math.max(n.protein, n.carb, n.fat, n.fiber, 40);
+        const maxSodium = 2000;
         setTimeout(() => {
             document.getElementById('nutriProtein').style.width = Math.min(100, (n.protein / maxN) * 100) + '%';
             document.getElementById('nutriCarb').style.width = Math.min(100, (n.carb / maxN) * 100) + '%';
             document.getElementById('nutriFat').style.width = Math.min(100, (n.fat / maxN) * 100) + '%';
             document.getElementById('nutriFiber').style.width = Math.min(100, (n.fiber / maxN) * 100) + '%';
+            document.getElementById('nutriSodium').style.width = Math.min(100, (n.sodium / maxSodium) * 100) + '%';
             document.getElementById('nutriProteinVal').textContent = n.protein + 'g';
             document.getElementById('nutriCarbVal').textContent = n.carb + 'g';
             document.getElementById('nutriFatVal').textContent = n.fat + 'g';
             document.getElementById('nutriFiberVal').textContent = n.fiber + 'g';
+            document.getElementById('nutriSodiumVal').textContent = n.sodium + 'mg';
         }, 200);
 
         // Steps
@@ -1868,15 +2398,16 @@
         simRunning = false;
         simElapsed = 0;
 
-        panContent.textContent = '🍳';
-        pan3D.classList.remove('shake');
-        fire3D.classList.remove('on');
-        steam3D.classList.remove('on');
-        stove.classList.remove('on');
-        aiChef.className = 'ai-chef';
-        aiChef.textContent = '👨‍🍳';
+        panFoodEmoji.textContent = '🍳';
+        panGroup.classList.remove('shake', 'tilt-left', 'tilt-right');
+        panGroup.style.transform = '';
+        flameGroup.classList.remove('on');
+        steamGroup.classList.remove('on');
+        oilBubbles.setAttribute('opacity', '0');
+        chefGroup.className = '';
+        document.getElementById('chefUtensil').style.display = 'block';
         simProgress.style.width = '0%';
-        simStatusText.textContent = 'Nhấn "Bắt đầu nấu" để AI thao tác trong bếp 3D';
+        simStatusText.textContent = 'Nhấn "Bắt đầu nấu" để AI thao tác trong bếp thực tế';
         pulseDot.style.display = 'none';
         hudStage.textContent = 'Chờ bắt đầu';
         hudTimer.textContent = '⏱️ 0s';
@@ -1889,79 +2420,82 @@
     }
 
     function getStepEffect(stepIndex, food) {
-        // Trả về: { fire, steam, stove, panContent, chefClass, chefEmoji, flyCount, spice, duration }
-        const totalSteps = food.steps.length;
-        const effects = [];
-
-        // Bước 1: Chuẩn bị (lửa nhỏ, hơi nước)
-        effects.push({
-            fire: true, steam: false, stove: true, panContent: '🍲',
-            chefClass: 'cooking', chefEmoji: '👨‍🍳',
-            flyCount: 0, spice: false, duration: 2500,
-            stage: 'Sơ chế nguyên liệu'
-        });
-
-        // Bước 2: Nêm/xào (lửa vừa, nguyên liệu bay)
-        effects.push({
-            fire: true, steam: true, stove: true, panContent: '🥩',
-            chefClass: 'sprinkle', chefEmoji: '👨‍🍳',
-            flyCount: 3, spice: true, duration: 3000,
-            stage: 'Nêm gia vị'
-        });
-
-        // Bước 3: Nấu chính (lửa lớn, chảo rung)
-        effects.push({
-            fire: true, steam: true, stove: true, panContent: '🔥',
-            chefClass: 'stir', chefEmoji: '👨‍🍳',
-            flyCount: 2, spice: false, duration: 3500,
-            stage: 'Nấu chính'
-        });
-
-        // Bước 4: Hoàn thiện
-        effects.push({
-            fire: true, steam: false, stove: true, panContent: '🍳',
-            chefClass: 'cooking', chefEmoji: '👨‍🍳',
-            flyCount: 1, spice: false, duration: 2500,
-            stage: 'Hoàn thiện'
-        });
-
-        // Bước 5: Trang trí & dọn
-        effects.push({
-            fire: false, steam: true, stove: false, panContent: food.emoji,
-            chefClass: '', chefEmoji: '👨‍🍳',
-            flyCount: 0, spice: false, duration: 2000,
-            stage: 'Trang trí món'
-        });
-
+        const effects = [
+            // Bước 1: Chuẩn bị
+            {
+                fire: false, steam: false, oil: false,
+                panEmoji: '🍲', panTilt: null,
+                chefClass: 'cooking', chefEmoji: '👨‍🍳',
+                flyCount: 0, spice: false, duration: 2600,
+                stage: 'Sơ chế nguyên liệu'
+            },
+            // Bước 2: Nêm/xào
+            {
+                fire: true, steam: false, oil: true,
+                panEmoji: '🥩', panTilt: 'tilt-left',
+                chefClass: 'sprinkle', chefEmoji: '👨‍🍳',
+                flyCount: 3, spice: true, duration: 3200,
+                stage: 'Nêm gia vị'
+            },
+            // Bước 3: Nấu chính
+            {
+                fire: true, steam: true, oil: true,
+                panEmoji: '🔥', panTilt: null, shake: true,
+                chefClass: 'stir', chefEmoji: '👨‍🍳',
+                flyCount: 2, spice: false, duration: 3800,
+                stage: 'Nấu chín'
+            },
+            // Bước 4: Hoàn thiện
+            {
+                fire: true, steam: false, oil: false,
+                panEmoji: '🍳', panTilt: 'tilt-right',
+                chefClass: 'cooking', chefEmoji: '👨‍🍳',
+                flyCount: 1, spice: false, duration: 2600,
+                stage: 'Hoàn thiện'
+            },
+            // Bước 5: Trang trí
+            {
+                fire: false, steam: true, oil: false,
+                panEmoji: food.emoji, panTilt: null,
+                chefClass: '', chefEmoji: '😋',
+                flyCount: 0, spice: false, duration: 2200,
+                stage: 'Trang trí & dọn'
+            }
+        ];
         return effects[Math.min(stepIndex, effects.length - 1)];
     }
 
     function applyEffect(effect) {
         // Fire
-        if (effect.fire) { fire3D.classList.add('on'); stove.classList.add('on'); }
-        else { fire3D.classList.remove('on'); stove.classList.remove('on'); }
+        if (effect.fire) flameGroup.classList.add('on');
+        else flameGroup.classList.remove('on');
 
         // Steam
-        if (effect.steam) steam3D.classList.add('on');
-        else steam3D.classList.remove('on');
+        if (effect.steam) steamGroup.classList.add('on');
+        else steamGroup.classList.remove('on');
 
-        // Pan content
-        panContent.textContent = effect.panContent;
+        // Oil bubbles
+        oilBubbles.setAttribute('opacity', effect.oil ? '1' : '0');
 
-        // Chef animation
-        aiChef.className = 'ai-chef ' + (effect.chefClass || '');
-        aiChef.textContent = effect.chefEmoji;
-
-        // Shake pan
-        if (effect.chefClass === 'stir') {
-            pan3D.classList.add('shake');
-            setTimeout(() => pan3D.classList.remove('shake'), 500);
+        // Pan content & tilt
+        panFoodEmoji.textContent = effect.panEmoji;
+        panGroup.classList.remove('tilt-left', 'tilt-right', 'shake');
+        if (effect.panTilt) panGroup.classList.add(effect.panTilt);
+        if (effect.shake) {
+            panGroup.classList.add('shake');
+            setTimeout(() => panGroup.classList.remove('shake'), 500);
         }
+
+        // Chef
+        chefGroup.className = effect.chefClass || '';
+        // Change chef emoji via SVG text update
+        const chefText = chefGroup.querySelector('text');
+        // Không đổi, SVG đã có sẵn
 
         // Fly ingredients
         if (effect.flyCount > 0) flyIngredients(effect.flyCount);
 
-        // Spice particles
+        // Spice
         if (effect.spice) sprinkleSpice();
 
         // HUD
@@ -1971,10 +2505,8 @@
     function flyIngredients(count) {
         if (!currentFood) return;
         const rect = kitchenScene.getBoundingClientRect();
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
-        const targetX = rect.width / 2 - 20;
-        const targetY = rect.height - 130;
+        const targetX = rect.width * 0.5;
+        const targetY = rect.height * 0.62;
 
         const ings = currentFood.ingredients.slice(0, count);
         ings.forEach((ing, i) => {
@@ -1982,13 +2514,12 @@
             el.className = 'flying-3d';
             el.textContent = ing.icon;
 
-            const startX = i % 2 === 0 ? 40 : rect.width - 40;
-            const startY = 80 + i * 15;
+            const startX = i % 2 === 0 ? 30 : rect.width - 50;
+            const startY = 60 + i * 20;
 
             el.style.left = startX + 'px';
             el.style.top = startY + 'px';
 
-            // Set CSS variables for arc
             const mx = targetX - startX;
             const my = targetY - startY;
             el.style.setProperty('--mx', mx + 'px');
@@ -2002,23 +2533,25 @@
 
     function sprinkleSpice() {
         const rect = kitchenScene.getBoundingClientRect();
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 14; i++) {
             const p = document.createElement('div');
             p.className = 'spice-particle';
-            const startX = rect.width / 2 - 30 + Math.random() * 60;
-            const startY = 60 + Math.random() * 20;
+            const startX = rect.width * 0.5 - 30 + Math.random() * 60;
+            const startY = 40 + Math.random() * 20;
             p.style.left = startX + 'px';
             p.style.top = startY + 'px';
-            p.style.background = ['#ffd93d', '#ff7a3d', '#ff477e', '#00d4aa'][Math.floor(Math.random() * 4)];
-            p.style.boxShadow = `0 0 8px ${p.style.background}`;
+            const colors = ['#ffd93d', '#ff7a3d', '#ff477e', '#00d4aa', '#ffffff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            p.style.background = color;
+            p.style.boxShadow = `0 0 8px ${color}`;
 
-            const dx = (Math.random() - 0.5) * 60;
-            const dy = 80 + Math.random() * 40;
+            const dx = (Math.random() - 0.5) * 50;
+            const dy = 90 + Math.random() * 50;
             p.style.setProperty('--dx', dx + 'px');
             p.style.setProperty('--dy', dy + 'px');
 
             kitchenScene.appendChild(p);
-            setTimeout(() => p.classList.add('fall'), 50 + i * 30);
+            setTimeout(() => p.classList.add('fall'), 30 + i * 25);
             setTimeout(() => p.remove(), 1200);
         }
     }
@@ -2033,9 +2566,7 @@
 
         const steps = currentFood.steps;
         const totalSteps = steps.length;
-        const baseDuration = 3000 / simSpeed;
 
-        // Timer
         simTimerInterval = setInterval(() => {
             simElapsed += 0.1 * simSpeed;
             hudTimer.textContent = '⏱️ ' + Math.round(simElapsed) + 's';
@@ -2055,7 +2586,6 @@
                 simStatusText.textContent = `Bước ${i+1}/${totalSteps}: ${step.title}`;
                 simProgress.style.width = ((i + 0.5) / totalSteps * 100) + '%';
                 applyEffect(effect);
-
                 if (stepEl) stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, i * stepDuration);
             simTimeouts.push(t1);
@@ -2071,12 +2601,10 @@
                     simStartBtn.disabled = false;
                     simStartBtn.innerHTML = '🔁 Nấu lại';
                     simStatusText.textContent = '✅ Hoàn thành! Món ăn đã sẵn sàng';
-                    panContent.textContent = currentFood.emoji;
-                    steam3D.classList.add('on');
-                    fire3D.classList.remove('on');
-                    stove.classList.remove('on');
-                    aiChef.className = 'ai-chef';
-                    aiChef.textContent = '😋';
+                    panFoodEmoji.textContent = currentFood.emoji;
+                    steamGroup.classList.add('on');
+                    flameGroup.classList.remove('on');
+                    chefGroup.className = '';
                     pulseDot.style.display = 'none';
                     hudStage.textContent = 'Hoàn thành';
                     if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
@@ -2098,7 +2626,7 @@
         showToast(`Tốc độ: ${simSpeed}x`);
     });
 
-    // Smart actions
+    // Actions
     document.getElementById('actionShopping')?.addEventListener('click', () => {
         if (!currentFood) return;
         const list = currentFood.ingredients.map(ing => {
@@ -2131,7 +2659,7 @@
 
     document.getElementById('actionScale')?.addEventListener('click', () => {
         if (!currentFood) return;
-        currentServings = currentServings >= 6 ? 1 : currentServings + 1;
+        currentServings = currentServings >= 8 ? 1 : currentServings + 1;
         statServings.textContent = currentServings;
         statKcal.textContent = Math.round(currentFood.kcal * currentServings / currentFood.servings);
         renderIngredients();
@@ -2148,6 +2676,14 @@
             modal.classList.remove('show');
             resetSimulation();
         }
+    });
+
+    // Random
+    document.getElementById('randomFab')?.addEventListener('click', () => {
+        const randomFood = foodDB[Math.floor(Math.random() * foodDB.length)];
+        openModal(randomFood, 85 + Math.floor(Math.random() * 15));
+        showToast('🎲 Món ngẫu nhiên cho bạn!');
+        if (navigator.vibrate) navigator.vibrate([20, 30, 20]);
     });
 
     // Typing
