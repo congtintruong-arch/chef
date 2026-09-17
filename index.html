@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI Chef Ultimate 5.0 — Bếp 3D Thông Minh</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+        --primary: #ff7a3d;
+        --primary-2: #ff477e;
+        --secondary: #6c5ce7;
+        --accent: #00d4aa;
+        --accent-2: #00b4d8;
+        --warn: #ffd93d;
+        --bg-dark: #05070f;
+        --text: #ffffff;
+        --text-dim: #8a92a8;
+        --glass: rgba(255,255,255,0.06);
+        --glass-border: rgba(255,255,255,0.12);
+    }
+
+    html, body {
+        height: 100%; overflow: hidden;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg-dark); color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        user-select: none;
+    }
+
+    /* ==== CINEMATIC BACKGROUND ==== */
+    .bg-scene {
+        position: fixed; inset: 0; z-index: 0;
+        background: 
+            radial-gradient(ellipse at 15% 8%, #3a1f5c 0%, transparent 45%),
+            radial-gradient(ellipse at 85% 15%, #1e3a5f 0%, transparent 45%),
+            radial-gradient(ellipse at 50% 100%, #4a1f2e 0%, transparent 55%),
+            radial-gradient(ellipse at 90% 90%, #0d3a3a 0%, transparent 50%),
+            linear-gradient(180deg, #05070f 0%, #0a0e1e 100%);
+        overflow: hidden;
+    }
+    .bg-grid {
+        position: absolute; inset: 0;
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%);
+        -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%);
+        animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift { to { background-position: 40px 40px; } }
+
+    .orb {
+        position: absolute; border-radius: 50%;
+        filter: blur(70px); opacity: 0.5;
+        animation: floatOrb 14s ease-in-out infinite;
+    }
+    .orb-1 { width: 300px; height: 300px; background: #ff7a3d; top: -80px; left: -80px; }
+    .orb-2 { width: 260px; height: 260px; background: #6c5ce7; top: 25%; right: -100px; animation-delay: -5s; }
+    .orb-3 { width: 280px; height: 280px; background: #00d4aa; bottom: -100px; left: 15%; animation-delay: -9s; }
+    .orb-4 { width: 200px; height: 200px; background: #ff477e; top: 55%; left: -60px; animation-delay: -3s; }
+    @keyframes floatOrb {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(40px, -50px) scale(1.15); }
+        66% { transform: translate(-30px, 40px) scale(0.9); }
+    }
+    .particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle {
+        position: absolute; width: 3px; height: 3px;
+        background: rgba(255, 255, 255, 0.7); border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 122, 61, 0.4);
+        animation: rise linear infinite;
+    }
+    @keyframes rise {
+        from { transform: translateY(100vh); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        to { transform: translateY(-10vh) translateX(80px); opacity: 0; }
+    }
+
+    /* ==== APP ==== */
+    .app {
+        position: relative; z-index: 1;
+        width: 100%; max-width: 440px;
+        height: 100vh; height: 100dvh;
+        margin: 0 auto; display: flex; flex-direction: column;
+        padding: 10px;
+    }
+
+    /* HEADER */
+    .header {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px; padding: 12px 14px;
+        display: flex; align-items: center; gap: 11px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        flex-shrink: 0; position: relative; overflow: hidden;
+    }
+    .header::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: headerShine 4s infinite;
+    }
+    @keyframes headerShine { 0% { left: -100%; } 50%, 100% { left: 200%; } }
+
+    .ai-avatar-3d {
+        position: relative; width: 44px; height: 44px; border-radius: 50%;
+        background: linear-gradient(135deg, #ff7a3d, #ff477e, #6c5ce7);
+        background-size: 200% 200%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 21px; flex-shrink: 0;
+        animation: gradientShift 4s ease infinite, pulse3d 3s ease-in-out infinite;
+    }
+    @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes pulse3d {
+        0%, 100% { box-shadow: 0 0 20px var(--primary); }
+        50% { box-shadow: 0 0 35px var(--primary), 0 0 80px rgba(255, 122, 61, 0.5); }
+    }
+    .ai-avatar-3d::before {
+        content: ''; position: absolute; inset: -4px; border-radius: 50%;
+        border: 2px solid transparent; border-top-color: rgba(255,255,255,0.9);
+        animation: spin 2.5s linear infinite;
+    }
+    .ai-avatar-3d::after {
+        content: ''; position: absolute; inset: -8px; border-radius: 50%;
+        border: 1px solid transparent; border-bottom-color: rgba(0, 212, 170, 0.6);
+        animation: spin 4s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .header-text { flex: 1; min-width: 0; }
+    .header-text h1 {
+        font-size: 15px; font-weight: 800;
+        background: linear-gradient(90deg, #fff, #ffb88c, #fff);
+        background-size: 200% auto;
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textShine 3s linear infinite;
+    }
+    @keyframes textShine { to { background-position: 200% center; } }
+    .header-text p {
+        font-size: 9.5px; color: var(--text-dim); margin-top: 2px;
+        display: flex; align-items: center; gap: 5px;
+    }
+    .status-dot {
+        width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent); animation: blink 1.8s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.3; } }
+
+    .header-badge {
+        padding: 4px 9px;
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.25), rgba(255, 71, 126, 0.2));
+        border: 1px solid rgba(255, 122, 61, 0.5);
+        border-radius: 100px; font-size: 8.5px; font-weight: 700;
+        color: #ffb88c; letter-spacing: 0.5px;
+    }
+
+    /* CONTEXT BAR */
+    .context-bar {
+        display: flex; gap: 5px; margin-top: 8px;
+        flex-shrink: 0;
+    }
+    .context-item {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px; padding: 6px 3px;
+        display: flex; flex-direction: column; align-items: center; gap: 2px;
+        cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .context-item:active { transform: scale(0.94); }
+    .context-item.active {
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.25), rgba(255, 71, 126, 0.15));
+        border-color: rgba(255, 122, 61, 0.6);
+        box-shadow: 0 4px 20px rgba(255, 122, 61, 0.4);
+    }
+    .context-icon { font-size: 14px; }
+    .context-label { font-size: 8px; color: var(--text-dim); font-weight: 600; }
+    .context-item.active .context-label { color: #ffb88c; }
+
+    /* CHAT */
+    .chat {
+        flex: 1; overflow-y: auto; overflow-x: hidden;
+        padding: 12px 2px; display: flex; flex-direction: column; gap: 12px;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .chat::-webkit-scrollbar { display: none; }
+
+    .msg {
+        display: flex; gap: 9px; align-items: flex-end;
+        animation: msgIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: bottom left;
+    }
+    .msg.user { flex-direction: row-reverse; transform-origin: bottom right; }
+    @keyframes msgIn {
+        from { opacity: 0; transform: translateY(24px) scale(0.88); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .msg-avatar {
+        width: 30px; height: 30px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; flex-shrink: 0;
+    }
+    .msg.ai .msg-avatar {
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        box-shadow: 0 0 15px var(--primary);
+    }
+    .msg.user .msg-avatar {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    }
+
+    .bubble {
+        max-width: 82%; padding: 11px 14px; border-radius: 18px;
+        font-size: 13px; line-height: 1.55;
+        backdrop-filter: blur(24px);
+        border: 1px solid var(--glass-border);
+        word-break: break-word;
+    }
+    .msg.ai .bubble {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+        border-bottom-left-radius: 6px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+        color: #e8ecf5;
+    }
+    .msg.user .bubble {
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        border-bottom-right-radius: 6px; color: white; font-weight: 500;
+        box-shadow: 0 10px 30px rgba(255, 122, 61, 0.4);
+    }
+
+    /* ANALYSIS BLOCK */
+    .analysis-block {
+        background: linear-gradient(135deg, rgba(0, 212, 170, 0.12), rgba(0, 180, 216, 0.08));
+        border: 1px solid rgba(0, 212, 170, 0.3);
+        border-radius: 12px; padding: 9px 11px; margin-bottom: 9px;
+        font-size: 11px; color: #b8e6d8;
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .analysis-row {
+        display: flex; align-items: center; gap: 6px;
+        opacity: 0; animation: analysisIn 0.5s forwards;
+    }
+    .analysis-row:nth-child(1) { animation-delay: 0.1s; }
+    .analysis-row:nth-child(2) { animation-delay: 0.2s; }
+    .analysis-row:nth-child(3) { animation-delay: 0.3s; }
+    .analysis-row:nth-child(4) { animation-delay: 0.4s; }
+    .analysis-row:nth-child(5) { animation-delay: 0.5s; }
+    @keyframes analysisIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .analysis-label { color: #7dd3c0; font-weight: 500; }
+
+    /* FOOD CARDS */
+    .food-cards { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+    .food-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px; padding: 10px;
+        display: flex; gap: 11px; align-items: center;
+        cursor: pointer; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative; overflow: hidden;
+        opacity: 0; animation: cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .food-card:nth-child(1) { animation-delay: 0.5s; }
+    .food-card:nth-child(2) { animation-delay: 0.65s; }
+    .food-card:nth-child(3) { animation-delay: 0.8s; }
+    @keyframes cardIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .food-card::before {
+        content: ''; position: absolute; top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(255, 122, 61, 0.3), transparent 30%);
+        opacity: 0; animation: rotateConic 3s linear infinite;
+    }
+    @keyframes rotateConic { to { transform: rotate(360deg); } }
+    .food-card::after {
+        content: ''; position: absolute; inset: 1px; border-radius: 15px;
+        background: linear-gradient(135deg, rgba(20, 26, 45, 0.95), rgba(15, 20, 35, 0.98));
+        z-index: 0;
+    }
+    .food-card > * { position: relative; z-index: 1; }
+    .food-card:active { transform: scale(0.96); border-color: rgba(255, 122, 61, 0.6); }
+    .food-card:active::before { opacity: 1; }
+
+    .food-thumb {
+        width: 54px; height: 54px; border-radius: 13px;
+        background: linear-gradient(135deg, #2a1f4d, #1e3a5f, #0d3a3a);
+        background-size: 200% 200%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; flex-shrink: 0;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+        position: relative; overflow: hidden;
+        animation: thumbGradient 6s ease infinite;
+    }
+    @keyframes thumbGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    .food-thumb::after {
+        content: ''; position: absolute; top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+        animation: shine 3s infinite;
+    }
+    @keyframes shine {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .food-info { flex: 1; min-width: 0; }
+    .food-name {
+        font-size: 13.5px; font-weight: 700; color: #fff;
+        margin-bottom: 3px; display: flex; align-items: center; gap: 6px;
+        flex-wrap: wrap;
+    }
+    .food-match {
+        font-size: 8.5px; font-weight: 700; padding: 2px 6px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border-radius: 20px; color: #001a15;
+    }
+    .food-desc {
+        font-size: 10.5px; color: var(--text-dim); line-height: 1.4;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .food-meta {
+        display: flex; gap: 7px; margin-top: 4px;
+        font-size: 9.5px; color: #7dd3c0;
+        flex-wrap: wrap;
+    }
+    .food-badge {
+        position: absolute; top: 6px; right: 6px;
+        background: linear-gradient(135deg, #ffd93d, #ff7a3d);
+        color: #2a1500; font-size: 8.5px; font-weight: 800;
+        padding: 2px 7px; border-radius: 20px;
+        letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(255, 217, 61, 0.5);
+        z-index: 2; animation: badgePulse 2s infinite;
+    }
+    @keyframes badgePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+
+    /* TYPING */
+    .typing { display: flex; gap: 5px; padding: 4px 0; align-items: center; }
+    .typing span {
+        width: 8px; height: 8px;
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out;
+        box-shadow: 0 0 12px var(--primary);
+    }
+    .typing span:nth-child(2) { animation-delay: 0.16s; }
+    .typing span:nth-child(3) { animation-delay: 0.32s; }
+    @keyframes typingBounce {
+        0%, 80%, 100% { transform: scale(0.5) translateY(0); opacity: 0.4; }
+        40% { transform: scale(1.2) translateY(-4px); opacity: 1; }
+    }
+
+    /* INPUT */
+    .input-wrap { flex-shrink: 0; padding-top: 5px; }
+    .chips-row {
+        display: flex; gap: 6px; overflow-x: auto;
+        padding: 5px 2px 7px; scrollbar-width: none;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip {
+        flex-shrink: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px; padding: 6px 12px;
+        font-size: 11px; font-weight: 500; color: #e8ecf5;
+        cursor: pointer; transition: all 0.3s;
+        white-space: nowrap;
+    }
+    .chip:active {
+        transform: scale(0.92);
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.3), rgba(255, 71, 126, 0.2));
+    }
+    .input-bar {
+        display: flex; gap: 8px; align-items: center;
+        background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+        backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px; padding: 5px 5px 5px 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+        transition: all 0.3s;
+    }
+    .input-bar:focus-within {
+        border-color: rgba(255, 122, 61, 0.6);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 3px rgba(255, 122, 61, 0.2);
+    }
+    #userInput {
+        flex: 1; background: transparent; border: none; outline: none;
+        color: white; font-size: 13.5px; font-family: inherit; padding: 8px 0;
+    }
+    #userInput::placeholder { color: #5a6480; }
+    .send-btn {
+        width: 42px; height: 42px; border-radius: 50%; border: none;
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        background-size: 200% 200%;
+        color: white; font-size: 17px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 8px 24px rgba(255, 122, 61, 0.5);
+        transition: all 0.25s;
+        flex-shrink: 0; animation: gradientShift 3s ease infinite;
+    }
+    .send-btn:active { transform: scale(0.88); }
+    .send-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+    /* ==== MODAL ==== */
+    .modal {
+        position: fixed; inset: 0; z-index: 200;
+        background: rgba(5, 7, 15, 0.92);
+        backdrop-filter: blur(24px);
+        display: flex; align-items: flex-end; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.4s;
+    }
+    .modal.show { opacity: 1; pointer-events: all; }
+
+    .modal-card {
+        background: linear-gradient(180deg, rgba(30, 40, 70, 0.98), rgba(10, 14, 25, 0.99));
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 28px 28px 0 0;
+        width: 100%; max-width: 440px;
+        max-height: 94vh; overflow-y: auto;
+        padding: 18px 16px 24px;
+        box-shadow: 0 -20px 60px rgba(0,0,0,0.7);
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-card::-webkit-scrollbar { width: 3px; }
+    .modal-card::-webkit-scrollbar-thumb { background: rgba(255,122,61,0.5); border-radius: 4px; }
+    .modal.show .modal-card { transform: translateY(0); }
+
+    .modal-drag {
+        width: 40px; height: 4px; background: rgba(255,255,255,0.2);
+        border-radius: 4px; margin: 0 auto 14px;
+    }
+
+    .modal-header {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .modal-emoji-big {
+        width: 68px; height: 68px; border-radius: 18px;
+        background: linear-gradient(135deg, #2a1f4d, #1e3a5f, #0d3a3a);
+        background-size: 200% 200%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 38px; flex-shrink: 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 40px rgba(255, 122, 61, 0.2);
+        animation: thumbGradient 5s ease infinite, floatEmoji 3s ease-in-out infinite;
+    }
+    @keyframes floatEmoji {
+        0%, 100% { transform: translateY(0) rotate(-3deg); }
+        50% { transform: translateY(-6px) rotate(3deg); }
+    }
+    .modal-title-wrap { flex: 1; min-width: 0; }
+    .modal-title {
+        font-size: 19px; font-weight: 800;
+        background: linear-gradient(90deg, #fff, #ffb88c, #fff);
+        background-size: 200% auto;
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textShine 3s linear infinite;
+        margin-bottom: 4px;
+    }
+    .modal-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .modal-tag {
+        font-size: 8.5px; padding: 2px 7px; border-radius: 20px;
+        background: rgba(255, 122, 61, 0.15);
+        border: 1px solid rgba(255, 122, 61, 0.35);
+        color: #ffb88c; font-weight: 600;
+    }
+
+    /* STATS */
+    .stats-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 5px; margin-bottom: 14px;
+    }
+    .stat-box {
+        background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+        border: 1px solid var(--glass-border);
+        border-radius: 11px; padding: 8px 3px;
+        text-align: center;
+    }
+    .stat-icon { font-size: 14px; margin-bottom: 2px; display: block; }
+    .stat-value {
+        font-size: 11.5px; font-weight: 800;
+        background: linear-gradient(135deg, #ffb88c, #ff7a3d);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 8px; color: var(--text-dim); margin-top: 2px; font-weight: 600; }
+
+    /* SECTION */
+    .section-title {
+        font-size: 10.5px; color: #7dd3c0; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.8px;
+        margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .section-title::after {
+        content: ''; flex: 1; height: 1px;
+        background: linear-gradient(90deg, rgba(0,212,170,0.4), transparent);
+    }
+
+    /* INGREDIENTS - CHI TIẾT ĐỊNH LƯỢNG */
+    .ingredients-list {
+        display: flex; flex-direction: column; gap: 5px;
+        margin-bottom: 16px;
+    }
+    .ingredient-row {
+        background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        border: 1px solid var(--glass-border);
+        border-radius: 11px; padding: 9px 11px;
+        display: flex; align-items: center; gap: 9px;
+        opacity: 0; animation: ingIn 0.4s forwards;
+    }
+    .ingredient-row:nth-child(1) { animation-delay: 0.05s; }
+    .ingredient-row:nth-child(2) { animation-delay: 0.1s; }
+    .ingredient-row:nth-child(3) { animation-delay: 0.15s; }
+    .ingredient-row:nth-child(4) { animation-delay: 0.2s; }
+    .ingredient-row:nth-child(5) { animation-delay: 0.25s; }
+    .ingredient-row:nth-child(6) { animation-delay: 0.3s; }
+    .ingredient-row:nth-child(7) { animation-delay: 0.35s; }
+    .ingredient-row:nth-child(8) { animation-delay: 0.4s; }
+    @keyframes ingIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .ing-icon-wrap {
+        width: 32px; height: 32px; border-radius: 9px;
+        background: linear-gradient(135deg, rgba(255,122,61,0.2), rgba(255,71,126,0.1));
+        display: flex; align-items: center; justify-content: center;
+        font-size: 17px; flex-shrink: 0;
+        border: 1px solid rgba(255,122,61,0.3);
+    }
+    .ing-info { flex: 1; min-width: 0; }
+    .ing-name-txt {
+        font-size: 12px; font-weight: 600; color: #e8ecf5;
+        margin-bottom: 2px;
+    }
+    .ing-qty {
+        font-size: 10.5px; color: #7dd3c0; font-weight: 600;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .ing-qty-num {
+        color: #ffb88c; font-weight: 800;
+    }
+    .ing-note {
+        font-size: 9.5px; color: var(--text-dim); font-style: italic;
+    }
+
+    /* NUTRITION */
+    .nutrition-chart {
+        background: linear-gradient(135deg, rgba(108, 92, 231, 0.12), rgba(0, 180, 216, 0.06));
+        border: 1px solid rgba(108, 92, 231, 0.3);
+        border-radius: 15px; padding: 12px; margin-bottom: 16px;
+    }
+    .nutri-row {
+        display: flex; align-items: center; gap: 9px; margin-bottom: 9px;
+    }
+    .nutri-row:last-child { margin-bottom: 0; }
+    .nutri-label {
+        font-size: 10.5px; color: #c4c9e0; width: 65px;
+        font-weight: 600; flex-shrink: 0;
+    }
+    .nutri-bar {
+        flex: 1; height: 7px; background: rgba(255,255,255,0.06);
+        border-radius: 100px; overflow: hidden;
+    }
+    .nutri-fill {
+        height: 100%; border-radius: 100px;
+        width: 0; transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nutri-fill.protein { background: linear-gradient(90deg, #ff477e, #ff7a3d); }
+    .nutri-fill.carb { background: linear-gradient(90deg, #ffd93d, #ff9a3d); }
+    .nutri-fill.fat { background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
+    .nutri-fill.fiber { background: linear-gradient(90deg, #00d4aa, #00b4d8); }
+    .nutri-value {
+        font-size: 10.5px; font-weight: 700; color: #fff;
+        width: 40px; text-align: right; flex-shrink: 0;
+    }
+
+    /* ============ KITCHEN 3D SIMULATION ============ */
+    .kitchen-scene {
+        position: relative;
+        width: 100%; height: 320px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #1a1030 0%, #0d0818 100%);
+        overflow: hidden;
+        margin-bottom: 12px;
+        box-shadow: inset 0 0 60px rgba(0,0,0,0.9), 0 8px 30px rgba(0,0,0,0.6);
+        perspective: 700px;
+    }
+
+    /* Kitchen wall */
+    .kitchen-wall {
+        position: absolute; inset: 0;
+        background: 
+            linear-gradient(180deg, rgba(60, 40, 100, 0.4) 0%, rgba(30, 20, 60, 0.5) 60%, rgba(15, 10, 30, 0.8) 100%);
+    }
+    .kitchen-wall::before {
+        content: '';
+        position: absolute; inset: 0;
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+
+    /* Shelf / cabinets at top */
+    .kitchen-shelf {
+        position: absolute; top: 0; left: 0; right: 0; height: 42px;
+        background: linear-gradient(180deg, #3a2a5a, #251a42);
+        border-bottom: 2px solid #4a3a70;
+        display: flex; justify-content: space-around; align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .shelf-item {
+        width: 22px; height: 26px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+        border-radius: 3px 3px 5px 5px;
+        border-top: 3px solid #ff7a3d;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px;
+        box-shadow: inset 0 -4px 8px rgba(0,0,0,0.3);
+    }
+    .shelf-item:nth-child(odd) { border-top-color: #6c5ce7; }
+    .shelf-item:nth-child(3n) { border-top-color: #00d4aa; }
+
+    /* Hanging utensils */
+    .utensil {
+        position: absolute; top: 44px;
+        font-size: 16px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        animation: utensilSway 4s ease-in-out infinite;
+    }
+    .utensil:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .utensil:nth-child(2) { left: 20%; animation-delay: -1s; }
+    .utensil:nth-child(3) { left: 30%; animation-delay: -2s; }
+    @keyframes utensilSway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
+
+    /* Countertop */
+    .countertop {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+        background: linear-gradient(180deg, #4a3a2a 0%, #2a1f15 100%);
+        border-top: 3px solid #6a4a2a;
+        box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
+        transform: rotateX(8deg);
+        transform-origin: bottom;
+    }
+    .countertop::after {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, transparent, rgba(255,217,61,0.3), transparent);
+        animation: counterShine 3s linear infinite;
+    }
+    @keyframes counterShine {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(100%); }
+    }
+
+    /* Stove */
+    .stove {
+        position: absolute; bottom: 90px; left: 50%;
+        transform: translateX(-50%) rotateX(8deg);
+        width: 160px; height: 30px;
+        background: linear-gradient(180deg, #1a1a22, #0a0a10);
+        border-radius: 12px 12px 6px 6px;
+        box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), 0 3px 8px rgba(0,0,0,0.5);
+        border-top: 1px solid #333;
+    }
+    .stove::before {
+        content: '';
+        position: absolute; top: 8px; left: 50%;
+        transform: translateX(-50%);
+        width: 110px; height: 12px;
+        background: radial-gradient(ellipse, rgba(255,122,61,0.6), rgba(255,71,126,0.3) 40%, transparent 70%);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+    .stove.on::before { opacity: 1; animation: stoveFlame 0.4s infinite alternate; }
+    @keyframes stoveFlame {
+        0% { transform: translateX(-50%) scaleY(1); opacity: 0.7; }
+        100% { transform: translateX(-50%) scaleY(1.3); opacity: 1; }
+    }
+
+    /* Pan 3D */
+    .pan-3d {
+        position: absolute; bottom: 115px; left: 50%;
+        transform: translateX(-50%) rotateX(8deg);
+        width: 130px; height: 50px;
+        transition: transform 0.4s;
+        transform-style: preserve-3d;
+    }
+    .pan-3d.shake { animation: panShake 0.5s ease-in-out; }
+    @keyframes panShake {
+        0%, 100% { transform: translateX(-50%) rotateX(8deg) rotate(0deg); }
+        25% { transform: translateX(-50%) rotateX(8deg) rotate(-6deg) translateY(-3px); }
+        75% { transform: translateX(-50%) rotateX(8deg) rotate(6deg) translateY(-3px); }
+    }
+
+    .pan-body {
+        position: absolute; bottom: 0; left: 0;
+        width: 130px; height: 32px;
+        background: linear-gradient(180deg, #3a3a48, #1a1a22 60%, #0a0a10);
+        border-radius: 50% 50% 30% 30%;
+        box-shadow: 
+            inset 0 8px 15px rgba(0,0,0,0.7),
+            inset 0 -3px 8px rgba(255,255,255,0.05),
+            0 6px 16px rgba(0,0,0,0.6);
+        border: 1px solid #4a4a5a;
+        overflow: hidden;
+    }
+    .pan-rim {
+        position: absolute; bottom: 28px; left: 0;
+        width: 130px; height: 8px;
+        background: linear-gradient(180deg, #5a5a6a, #2a2a35);
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .pan-content {
+        position: absolute; bottom: 4px; left: 50%;
+        transform: translateX(-50%);
+        font-size: 22px;
+        transition: all 0.5s;
+    }
+    .pan-handle {
+        position: absolute; bottom: 12px; right: -50px;
+        width: 55px; height: 8px;
+        background: linear-gradient(180deg, #2a2a35, #15151d);
+        border-radius: 6px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+        border: 1px solid #3a3a4a;
+    }
+
+    /* Fire */
+    .fire-3d {
+        position: absolute; bottom: 88px; left: 50%;
+        transform: translateX(-50%);
+        width: 120px; height: 40px;
+        opacity: 0; transition: opacity 0.4s;
+        pointer-events: none;
+    }
+    .fire-3d.on { opacity: 1; }
+    .flame {
+        position: absolute; bottom: 0;
+        width: 20px; height: 40px;
+        background: radial-gradient(ellipse at bottom, #ffd93d 0%, #ff7a3d 40%, #ff477e 70%, transparent 100%);
+        border-radius: 50% 50% 20% 20%;
+        filter: blur(2px);
+        animation: flameJump 0.3s infinite alternate;
+    }
+    .flame:nth-child(1) { left: 20px; animation-delay: 0s; height: 35px; }
+    .flame:nth-child(2) { left: 45px; animation-delay: 0.1s; height: 42px; }
+    .flame:nth-child(3) { left: 65px; animation-delay: 0.15s; height: 38px; }
+    .flame:nth-child(4) { left: 85px; animation-delay: 0.05s; height: 36px; }
+    @keyframes flameJump {
+        0% { transform: scaleY(1) translateY(0); opacity: 0.85; }
+        100% { transform: scaleY(1.2) translateY(-3px); opacity: 1; }
+    }
+
+    /* Steam */
+    .steam-3d {
+        position: absolute; bottom: 145px; left: 50%;
+        transform: translateX(-50%);
+        width: 80px; height: 80px;
+        opacity: 0; transition: opacity 0.5s;
+        pointer-events: none;
+    }
+    .steam-3d.on { opacity: 1; }
+    .steam-puff {
+        position: absolute; bottom: 0;
+        width: 14px; height: 14px;
+        background: radial-gradient(circle, rgba(255,255,255,0.7), transparent);
+        border-radius: 50%;
+        animation: steamRise 2.5s ease-out infinite;
+    }
+    .steam-puff:nth-child(1) { left: 5%; animation-delay: 0s; }
+    .steam-puff:nth-child(2) { left: 25%; animation-delay: 0.5s; }
+    .steam-puff:nth-child(3) { left: 45%; animation-delay: 1s; }
+    .steam-puff:nth-child(4) { left: 65%; animation-delay: 1.5s; }
+    .steam-puff:nth-child(5) { left: 85%; animation-delay: 2s; }
+    @keyframes steamRise {
+        0% { transform: translateY(0) scale(0.4); opacity: 0; }
+        20% { opacity: 0.8; }
+        100% { transform: translateY(-80px) scale(2.5); opacity: 0; }
+    }
+
+    /* AI Chef character */
+    .ai-chef {
+        position: absolute; bottom: 60px; right: 15px;
+        font-size: 40px;
+        filter: drop-shadow(0 4px 12px rgba(255,122,61,0.6));
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: bottom center;
+        z-index: 5;
+    }
+    .ai-chef.cooking {
+        animation: chefCook 0.7s ease-in-out infinite;
+    }
+    @keyframes chefCook {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-8px) rotate(5deg); }
+    }
+    .ai-chef.sprinkle { animation: chefSprinkle 0.6s ease-in-out; }
+    @keyframes chefSprinkle {
+        0%, 100% { transform: rotate(-5deg); }
+        25% { transform: rotate(-25deg) translateY(-5px); }
+        75% { transform: rotate(15deg) translateY(-5px); }
+    }
+    .ai-chef.stir { animation: chefStir 0.8s ease-in-out infinite; }
+    @keyframes chefStir {
+        0%, 100% { transform: rotate(-3deg) translateX(0); }
+        50% { transform: rotate(3deg) translateX(-8px); }
+    }
+
+    /* Flying ingredients */
+    .flying-3d {
+        position: absolute;
+        font-size: 22px;
+        z-index: 6;
+        opacity: 0;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        pointer-events: none;
+    }
+    .flying-3d.fly {
+        animation: flyArc 1.4s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+    }
+    @keyframes flyArc {
+        0% { opacity: 0; transform: translate(0, 0) scale(0.4) rotate(0deg); }
+        15% { opacity: 1; }
+        50% { transform: translate(calc(var(--mx) * 0.5), calc(var(--my) * 0.5 - 60px)) scale(1.3) rotate(180deg); }
+        100% { opacity: 1; transform: translate(var(--mx), var(--my)) scale(0.7) rotate(360deg); }
+    }
+
+    /* Spice particles when sprinkling */
+    .spice-particle {
+        position: absolute;
+        width: 4px; height: 4px;
+        background: #ffd93d;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #ffd93d;
+        pointer-events: none;
+        opacity: 0;
+    }
+    .spice-particle.fall { animation: spiceFall 1s ease-in forwards; }
+    @keyframes spiceFall {
+        0% { opacity: 0; transform: translate(0, 0); }
+        20% { opacity: 1; }
+        100% { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+    }
+
+    /* Simulation HUD */
+    .sim-hud {
+        position: absolute; top: 54px; left: 10px; right: 10px;
+        display: flex; justify-content: space-between;
+        pointer-events: none;
+        z-index: 10;
+    }
+    .hud-chip {
+        background: rgba(10, 14, 25, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 100px;
+        padding: 4px 10px;
+        font-size: 9.5px;
+        color: #ffb88c;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .hud-chip .dot {
+        width: 5px; height: 5px; border-radius: 50%;
+        background: #00d4aa;
+        box-shadow: 0 0 6px #00d4aa;
+        animation: blink 1s infinite;
+    }
+
+    /* Simulation controls */
+    .sim-status {
+        font-size: 11px; color: #ffb88c; font-weight: 600;
+        margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+        min-height: 16px;
+    }
+    .sim-status .pulse-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #00d4aa; box-shadow: 0 0 8px #00d4aa;
+        animation: blink 1s infinite;
+    }
+
+    .sim-progress {
+        height: 4px; background: rgba(255,255,255,0.1);
+        border-radius: 100px; overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .sim-progress-fill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, #ff7a3d, #ffd93d, #00d4aa);
+        background-size: 200% 100%;
+        border-radius: 100px;
+        transition: width 0.3s;
+        animation: progressGlow 1.5s linear infinite;
+    }
+    @keyframes progressGlow {
+        to { background-position: 200% 0; }
+    }
+
+    .sim-controls {
+        display: flex; gap: 7px; align-items: center;
+    }
+    .sim-btn {
+        flex: 1; padding: 10px 12px; border-radius: 100px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+        color: white; font-size: 11.5px; font-weight: 700;
+        cursor: pointer; transition: all 0.25s;
+        display: flex; align-items: center; justify-content: center; gap: 5px;
+        font-family: inherit;
+    }
+    .sim-btn:active { transform: scale(0.95); }
+    .sim-btn.primary {
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        border: none; box-shadow: 0 6px 20px rgba(255, 122, 61, 0.5);
+    }
+    .sim-btn:disabled { opacity: 0.5; pointer-events: none; }
+    .sim-btn.speed-btn {
+        flex: 0 0 auto; padding: 10px 12px;
+        font-size: 11px;
+    }
+
+    /* Steps */
+    .steps-container {
+        display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px;
+    }
+    .step-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+        border: 1px solid var(--glass-border);
+        border-radius: 15px; padding: 11px;
+        display: flex; gap: 11px;
+        position: relative; overflow: hidden;
+        opacity: 0; transform: translateY(15px);
+        animation: stepIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        transition: all 0.4s;
+    }
+    .step-card:nth-child(1) { animation-delay: 0.1s; }
+    .step-card:nth-child(2) { animation-delay: 0.22s; }
+    .step-card:nth-child(3) { animation-delay: 0.34s; }
+    .step-card:nth-child(4) { animation-delay: 0.46s; }
+    .step-card:nth-child(5) { animation-delay: 0.58s; }
+    .step-card:nth-child(6) { animation-delay: 0.7s; }
+    @keyframes stepIn { to { opacity: 1; transform: translateY(0); } }
+    .step-card.active {
+        border-color: rgba(255, 122, 61, 0.6);
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.15), rgba(255, 71, 126, 0.08));
+        box-shadow: 0 8px 30px rgba(255, 122, 61, 0.3);
+    }
+    .step-card.done { opacity: 0.55; }
+    .step-card.done .step-num {
+        background: linear-gradient(135deg, #00d4aa, #00b4d8);
+        color: #001a15;
+    }
+    .step-num {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; font-weight: 800; color: white;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(255, 122, 61, 0.4);
+        transition: all 0.4s;
+    }
+    .step-card.active .step-num { animation: stepPulse 1.5s infinite; }
+    @keyframes stepPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255, 122, 61, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(255, 122, 61, 0); }
+    }
+    .step-content { flex: 1; min-width: 0; }
+    .step-title {
+        font-size: 12px; font-weight: 700; color: #fff;
+        margin-bottom: 3px; display: flex; align-items: center; gap: 6px;
+        flex-wrap: wrap;
+    }
+    .step-time {
+        font-size: 8.5px; padding: 2px 7px;
+        background: linear-gradient(135deg, rgba(255,217,61,0.2), rgba(255,122,61,0.2));
+        border: 1px solid rgba(255,217,61,0.4);
+        border-radius: 20px; color: #ffd93d; font-weight: 700;
+    }
+    .step-desc {
+        font-size: 10.5px; color: #a8b0c4; line-height: 1.5;
+    }
+
+    /* SMART ACTIONS */
+    .smart-actions {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 5px; margin-bottom: 14px;
+    }
+    .action-btn {
+        background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+        border: 1px solid var(--glass-border);
+        border-radius: 11px; padding: 9px 4px;
+        display: flex; flex-direction: column; align-items: center; gap: 3px;
+        cursor: pointer; transition: all 0.3s;
+        font-family: inherit;
+    }
+    .action-btn:active {
+        transform: scale(0.94);
+        border-color: rgba(255, 122, 61, 0.5);
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.2), rgba(255, 71, 126, 0.1));
+    }
+    .action-icon { font-size: 16px; }
+    .action-label { font-size: 8.5px; color: #c4c9e0; font-weight: 600; text-align: center; }
+
+    .modal-close-btn {
+        width: 100%; padding: 12px; border-radius: 100px; border: none;
+        background: linear-gradient(135deg, #ff7a3d, #ff477e);
+        color: white; font-size: 13px; font-weight: 700;
+        cursor: pointer; box-shadow: 0 12px 30px rgba(255, 122, 61, 0.5);
+        font-family: inherit; margin-top: 4px;
+    }
+    .modal-close-btn:active { transform: scale(0.95); }
+
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
+
+    .toast {
+        position: fixed; bottom: 100px; left: 50%;
+        transform: translateX(-50%) translateY(30px);
+        background: linear-gradient(135deg, rgba(255, 122, 61, 0.95), rgba(255, 71, 126, 0.95));
+        color: white; padding: 10px 18px; border-radius: 100px;
+        font-size: 12px; font-weight: 600;
+        box-shadow: 0 10px 30px rgba(255, 122, 61, 0.5);
+        opacity: 0; pointer-events: none;
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 300;
+        border: 1px solid rgba(255,255,255,0.3);
+        max-width: 85%; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="bg-scene">
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="particles" id="particles"></div>
+</div>
+
+<div class="app">
+    <div class="header">
+        <div class="ai-avatar-3d">🤖</div>
+        <div class="header-text">
+            <h1>AI Chef Ultimate</h1>
+            <p><span class="status-dot"></span> Bếp 3D • Định lượng • Mô phỏng</p>
+        </div>
+        <div class="header-badge">5.0</div>
+    </div>
+
+    <div class="context-bar">
+        <div class="context-item" data-ctx="time">
+            <span class="context-icon" id="timeIcon">🌅</span>
+            <span class="context-label" id="timeLabel">Bữa sáng</span>
+        </div>
+        <div class="context-item" data-ctx="weather">
+            <span class="context-icon" id="weatherIcon">☀️</span>
+            <span class="context-label" id="weatherLabel">Trời nóng</span>
+        </div>
+        <div class="context-item" data-ctx="people">
+            <span class="context-icon">👥</span>
+            <span class="context-label" id="peopleLabel">2 người</span>
+        </div>
+        <div class="context-item" data-ctx="diet">
+            <span class="context-icon">🥗</span>
+            <span class="context-label" id="dietLabel">Bình thường</span>
+        </div>
+    </div>
+
+    <div class="chat" id="chat">
+        <div class="msg ai">
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+                Xin chào! Mình là <b>AI Chef Ultimate 5.0</b> 👨‍🍳<br>
+                Mình có <b>bếp 3D</b>, mô phỏng AI thao tác, <b>định lượng chi tiết</b> từng nguyên liệu!
+            </div>
+        </div>
+        <div class="msg ai">
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+                💡 Chạm các ô phía trên để tùy chỉnh, rồi hỏi món bạn muốn nấu nhé!
+            </div>
+        </div>
+    </div>
+
+    <div class="input-wrap safe-bottom">
+        <div class="chips-row" id="chipsRow">
+            <div class="chip" data-q="Món Việt dễ nấu">🍚 Món Việt</div>
+            <div class="chip" data-q="Món nước nóng">🍜 Món nước</div>
+            <div class="chip" data-q="Món chay healthy">🥗 Món chay</div>
+            <div class="chip" data-q="Món ăn sáng nhanh">🍳 Ăn sáng</div>
+            <div class="chip" data-q="Món từ gà">🍗 Từ gà</div>
+            <div class="chip" data-q="Món từ trứng">🥚 Từ trứng</div>
+            <div class="chip" data-q="Món từ bò">🥩 Từ bò</div>
+            <div class="chip" data-q="Món từ tôm">🦐 Từ tôm</div>
+            <div class="chip" data-q="Món healthy ít calo">💪 Healthy</div>
+            <div class="chip" data-q="Món nhanh 15 phút">⚡ Nhanh</div>
+        </div>
+
+        <div class="input-bar">
+            <input type="text" id="userInput" placeholder="Nhập món hoặc nguyên liệu..." autocomplete="off">
+            <button class="send-btn" id="sendBtn">➤</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-card">
+        <div class="modal-drag"></div>
+
+        <div class="modal-header">
+            <div class="modal-emoji-big" id="modalEmoji">🍜</div>
+            <div class="modal-title-wrap">
+                <div class="modal-title" id="modalTitle">Phở bò</div>
+                <div class="modal-tags" id="modalTags"></div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-icon">⏱️</span>
+                <div class="stat-value" id="statTime">30p</div>
+                <div class="stat-label">Thời gian</div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon">🔥</span>
+                <div class="stat-value" id="statKcal">450</div>
+                <div class="stat-label">Kcal</div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon">⭐</span>
+                <div class="stat-value" id="statMatch">95%</div>
+                <div class="stat-label">Phù hợp</div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-icon">👥</span>
+                <div class="stat-value" id="statServings">2</div>
+                <div class="stat-label">Khẩu phần</div>
+            </div>
+        </div>
+
+        <!-- NGUYÊN LIỆU ĐỊNH LƯỢNG -->
+        <div class="section-title">🥘 Nguyên liệu (định lượng theo <span id="servingsLabel">2</span> người)</div>
+        <div class="ingredients-list" id="ingredientsList"></div>
+
+        <!-- DINH DƯỠNG -->
+        <div class="section-title">📊 Dinh dưỡng / khẩu phần</div>
+        <div class="nutrition-chart">
+            <div class="nutri-row">
+                <span class="nutri-label">Protein</span>
+                <div class="nutri-bar"><div class="nutri-fill protein" id="nutriProtein" style="width:0%"></div></div>
+                <span class="nutri-value" id="nutriProteinVal">0g</span>
+            </div>
+            <div class="nutri-row">
+                <span class="nutri-label">Carbs</span>
+                <div class="nutri-bar"><div class="nutri-fill carb" id="nutriCarb" style="width:0%"></div></div>
+                <span class="nutri-value" id="nutriCarbVal">0g</span>
+            </div>
+            <div class="nutri-row">
+                <span class="nutri-label">Chất béo</span>
+                <div class="nutri-bar"><div class="nutri-fill fat" id="nutriFat" style="width:0%"></div></div>
+                <span class="nutri-value" id="nutriFatVal">0g</span>
+            </div>
+            <div class="nutri-row">
+                <span class="nutri-label">Chất xơ</span>
+                <div class="nutri-bar"><div class="nutri-fill fiber" id="nutriFiber" style="width:0%"></div></div>
+                <span class="nutri-value" id="nutriFiberVal">0g</span>
+            </div>
+        </div>
+
+        <!-- KITCHEN 3D SIMULATION -->
+        <div class="section-title">🎬 Bếp 3D — AI thao tác trực quan</div>
+        <div class="kitchen-scene" id="kitchenScene">
+            <div class="kitchen-wall"></div>
+
+            <!-- Shelf with items -->
+            <div class="kitchen-shelf">
+                <div class="shelf-item">🫙</div>
+                <div class="shelf-item">🧂</div>
+                <div class="shelf-item">🌶️</div>
+                <div class="shelf-item">🍯</div>
+                <div class="shelf-item">🧄</div>
+                <div class="shelf-item">🥄</div>
+                <div class="shelf-item">🥢</div>
+                <div class="shelf-item">🍶</div>
+            </div>
+
+            <!-- Hanging utensils -->
+            <div class="utensil">🥄</div>
+            <div class="utensil">🍴</div>
+            <div class="utensil">🔪</div>
+
+            <!-- Countertop -->
+            <div class="countertop"></div>
+
+            <!-- Stove -->
+            <div class="stove" id="stove"></div>
+
+            <!-- Fire -->
+            <div class="fire-3d" id="fire3D">
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+            </div>
+
+            <!-- Pan -->
+            <div class="pan-3d" id="pan3D">
+                <div class="pan-body">
+                    <div class="pan-content" id="panContent">🍳</div>
+                </div>
+                <div class="pan-rim"></div>
+                <div class="pan-handle"></div>
+            </div>
+
+            <!-- Steam -->
+            <div class="steam-3d" id="steam3D">
+                <div class="steam-puff"></div>
+                <div class="steam-puff"></div>
+                <div class="steam-puff"></div>
+                <div class="steam-puff"></div>
+                <div class="steam-puff"></div>
+            </div>
+
+            <!-- AI Chef -->
+            <div class="ai-chef" id="aiChef">👨‍🍳</div>
+
+            <!-- HUD -->
+            <div class="sim-hud">
+                <div class="hud-chip"><span class="dot"></span><span id="hudStage">Chờ bắt đầu</span></div>
+                <div class="hud-chip" id="hudTimer">⏱️ 0s</div>
+            </div>
+        </div>
+
+        <!-- SIM CONTROLS -->
+        <div class="sim-status">
+            <span class="pulse-dot" id="pulseDot" style="display:none"></span>
+            <span id="simStatusText">Nhấn "Bắt đầu nấu" để AI thao tác trong bếp 3D</span>
+        </div>
+        <div class="sim-progress">
+            <div class="sim-progress-fill" id="simProgress"></div>
+        </div>
+        <div class="sim-controls" style="margin-bottom:16px;">
+            <button class="sim-btn primary" id="simStartBtn">▶ Bắt đầu nấu</button>
+            <button class="sim-btn speed-btn" id="simSpeedBtn">1x</button>
+            <button class="sim-btn speed-btn" id="simResetBtn">↻</button>
+        </div>
+
+        <!-- STEPS -->
+        <div class="section-title">👨‍🍳 Các bước thực hiện</div>
+        <div class="steps-container" id="stepsContainer"></div>
+
+        <!-- ACTIONS -->
+        <div class="section-title">⚡ Hành động thông minh</div>
+        <div class="smart-actions">
+            <button class="action-btn" id="actionShopping">
+                <span class="action-icon">🛒</span>
+                <span class="action-label">Đi chợ</span>
+            </button>
+            <button class="action-btn" id="actionShare">
+                <span class="action-icon">📤</span>
+                <span class="action-label">Chia sẻ</span>
+            </button>
+            <button class="action-btn" id="actionSave">
+                <span class="action-icon">❤️</span>
+                <span class="action-label">Yêu thích</span>
+            </button>
+            <button class="action-btn" id="actionScale">
+                <span class="action-icon">⚖️</span>
+                <span class="action-label">Đổi KP</span>
+            </button>
+        </div>
+
+        <button class="modal-close-btn" id="modalBtn">Đóng</button>
+    </div>
+</div>
+
+<div class="toast" id="toast">Đã chọn</div>
+
+<script>
+(function() {
+    // ========== PARTICLES ==========
+    const particlesEl = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (10 + Math.random() * 15) + 's';
+        p.style.animationDelay = (Math.random() * 15) + 's';
+        p.style.opacity = 0.2 + Math.random() * 0.6;
+        const size = 1.5 + Math.random() * 3;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        particlesEl.appendChild(p);
+    }
+
+    // ========== FOOD DATABASE - ULTIMATE với ĐỊNH LƯỢNG CHI TIẾT ==========
+    const foodDB = [
+        {
+            name: "Phở bò", emoji: "🍜",
+            tags: ["món nước","món việt","bò","phở","sáng","nước","nóng","đầy đủ"],
+            desc: "Nước dùng thanh ngọt, bánh phở mềm, thịt bò tái. Tuyệt vời cho bữa sáng.",
+            time: 45, kcal: 450, servings: 2,
+            ingredients: [
+                { icon: "🍜", name: "Bánh phở tươi", qty: 400, unit: "g", note: "sợi to bản" },
+                { icon: "🥩", name: "Thịt bò (gầu + nạm)", qty: 300, unit: "g", note: "thái mỏng" },
+                { icon: "🦴", name: "Xương ống bò", qty: 1.5, unit: "kg", note: "chần sơ trước" },
+                { icon: "🫚", name: "Gừng + Quế + Hồi", qty: 1, unit: "nhánh", note: "nướng thơm" },
+                { icon: "🧅", name: "Hành tây", qty: 2, unit: "củ", note: "nướng cháy vỏ" },
+                { icon: "🌿", name: "Ngò gai + Húng quế", qty: 100, unit: "g", note: "rau sống" },
+                { icon: "🌶️", name: "Ớt tươi + Chanh", qty: 2, unit: "trái", note: "tùy khẩu vị" },
+                { icon: "🧂", name: "Nước mắm ngon", qty: 3, unit: "muỗng", note: "loại 40 độ đạm" }
+            ],
+            nutrition: { protein: 28, carb: 52, fat: 14, fiber: 4 },
+            steps: [
+                { title: "Ninh xương bò 2 giờ", time: "120 phút", desc: "Chần xương bò qua nước sôi, rửa sạch. Ninh với gừng nướng, quế, hồi, hành tây nướng trong 2 giờ. Hớt bọt liên tục để nước trong." },
+                { title: "Sơ chế thịt bò", time: "15 phút", desc: "Thịt bò để ngăn đông 20 phút cho dễ thái. Thái mỏng 2mm. Ướp chút muối tiêu, dầu ăn." },
+                { title: "Trụng bánh phở & xếp tô", time: "3 phút", desc: "Đun nước sôi, trụng bánh phở 10 giây. Xếp bánh phở vào tô, để thịt bò tái lên trên." },
+                { title: "Chan nước dùng sôi", time: "2 phút", desc: "Đun nước dùng thật sôi, nêm nước mắm, muối, đường phèn. Chan ngập tô để thịt bò chín tái." },
+                { title: "Thêm rau & thưởng thức", time: "2 phút", desc: "Thêm ngò gai, húng quế, hành lá. Vắt chanh, thêm ớt sa tế tùy khẩu vị. Ăn ngay khi nóng." }
+            ]
+        },
+        {
+            name: "Bún chả Hà Nội", emoji: "🍢",
+            tags: ["món việt","bún","thịt nướng","hà nội","trưa","khô"],
+            desc: "Chả viên nướng thơm, nước mắm chua ngọt, ăn kèm bún và rau sống.",
+            time: 40, kcal: 520, servings: 3,
+            ingredients: [
+                { icon: "🍜", name: "Bún tươi", qty: 600, unit: "g", note: "sợi nhỏ" },
+                { icon: "🥩", name: "Thịt heo băm", qty: 300, unit: "g", note: "nạc vai" },
+                { icon: "🥓", name: "Thịt ba chỉ", qty: 400, unit: "g", note: "thái lát mỏng" },
+                { icon: "🧄", name: "Tỏi + Hành tím", qty: 4, unit: "tép", note: "băm nhuyễn" },
+                { icon: "🌶️", name: "Ớt tươi", qty: 3, unit: "trái", note: "băm nhỏ" },
+                { icon: "🌿", name: "Rau sống (xà lách, tía tô)", qty: 200, unit: "g", note: "rửa sạch" },
+                { icon: "🍯", name: "Nước mắm + Đường", qty: 4, unit: "muỗng", note: "tỉ lệ 3:2:1" },
+                { icon: "🥕", name: "Cà rốt + Củ cải", qty: 1, unit: "củ", note: "ngâm chua ngọt" }
+            ],
+            nutrition: { protein: 24, carb: 58, fat: 18, fiber: 3 },
+            steps: [
+                { title: "Ướp thịt 20 phút", time: "20 phút", desc: "Thịt băm + ba chỉ ướp nước mắm, đường, tỏi, hành tím, tiêu. Trộn đều, để ngấm." },
+                { title: "Nặn chả viên", time: "10 phút", desc: "Nặn thịt băm thành viên nhỏ dẹt 3cm. Ba chỉ thái lát mỏng 2mm." },
+                { title: "Nướng chả trên than hoa", time: "15 phút", desc: "Nướng chả trên than hồng, trở đều 2 mặt đến khi vàng xém. Thơm lừng." },
+                { title: "Pha nước chấm", time: "5 phút", desc: "Pha nước mắm, đường, chanh, tỏi ớt băm. Nêm vừa chua ngọt, thêm đu đủ ngâm." },
+                { title: "Bày món & thưởng thức", time: "2 phút", desc: "Bày bún, chả nướng, rau sống, dưa góp ra đĩa. Chấm nước mắm chua ngọt." }
+            ]
+        },
+        {
+            name: "Cơm tấm sườn", emoji: "🍚",
+            tags: ["món việt","cơm","sườn","trưa","tối","sài gòn"],
+            desc: "Sườn nướng mật ong, cơm tấm bì, ăn kèm nước mắm chua ngọt.",
+            time: 35, kcal: 650, servings: 2,
+            ingredients: [
+                { icon: "🍚", name: "Gạo tấm", qty: 300, unit: "g", note: "vo nhẹ" },
+                { icon: "🥓", name: "Sườn cốt lết", qty: 400, unit: "g", note: "đập mềm" },
+                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "ốp la" },
+                { icon: "🌿", name: "Mỡ hành + Hành phi", qty: 3, unit: "muỗng", note: "thơm" },
+                { icon: "🍯", name: "Mật ong", qty: 2, unit: "muỗng", note: "pha nước ấm" },
+                { icon: "🧄", name: "Tỏi + Sả băm", qty: 3, unit: "tép", note: "ướp sườn" },
+                { icon: "🥒", name: "Dưa leo + Cà chua", qty: 1, unit: "trái", note: "cắt lát" },
+                { icon: "🍯", name: "Nước mắm chua ngọt", qty: 4, unit: "muỗng", note: "pha sẵn" }
+            ],
+            nutrition: { protein: 32, carb: 72, fat: 22, fiber: 3 },
+            steps: [
+                { title: "Ướp sườn 30 phút", time: "30 phút", desc: "Sườn đập mềm, ướp mật ong, nước mắm, tỏi, sả, tiêu, dầu ăn. Để ngấm." },
+                { title: "Nấu cơm tấm", time: "20 phút", desc: "Vo gạo tấm sạch, nấu với nước dừa tươi + chút muối cho thơm dẻo." },
+                { title: "Nướng sườn trên than", time: "15 phút", desc: "Nướng sườn trên than hồng, trở đều, quét thêm mật ong để bóng đẹp." },
+                { title: "Chiên trứng ốp la", time: "3 phút", desc: "Chiên trứng ốp la, lòng đỏ còn hơi sống, viền giòn. Rắc tiêu." },
+                { title: "Bày món hoàn chỉnh", time: "2 phút", desc: "Cơm tấm ra đĩa, sườn nướng, trứng, mỡ hành, dưa leo, cà chua. Rưới nước mắm." }
+            ]
+        },
+        {
+            name: "Thịt kho trứng", emoji: "🥚",
+            tags: ["món việt","thịt heo","trứng","kho","tối","cơm"],
+            desc: "Thịt ba chỉ kho mềm, trứng vịt thấm vị, ăn với cơm trắng rất ngon.",
+            time: 60, kcal: 580, servings: 4,
+            ingredients: [
+                { icon: "🥓", name: "Thịt ba chỉ", qty: 800, unit: "g", note: "cắt khối 4cm" },
+                { icon: "🥚", name: "Trứng vịt", qty: 6, unit: "quả", note: "luộc chín" },
+                { icon: "🥥", name: "Nước dừa tươi", qty: 500, unit: "ml", note: "loại tươi" },
+                { icon: "🍬", name: "Đường thốt nốt", qty: 50, unit: "g", note: "thắng màu" },
+                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng", note: "40 độ đạm" },
+                { icon: "🧄", name: "Hành tím + Tỏi", qty: 5, unit: "tép", note: "băm nhuyễn" },
+                { icon: "🌶️", name: "Ớt hiểm", qty: 2, unit: "trái", note: "nguyên trái" },
+                { icon: "🧂", name: "Muối + Tiêu", qty: 1, unit: "muỗng", note: "nêm vừa" }
+            ],
+            nutrition: { protein: 26, carb: 24, fat: 38, fiber: 2 },
+            steps: [
+                { title: "Luộc & bóc trứng", time: "12 phút", desc: "Luộc trứng vịt trong nước sôi 10 phút, vớt ra ngâm nước lạnh, bóc vỏ để riêng." },
+                { title: "Thắng nước màu", time: "5 phút", desc: "Đun đường thốt nốt với 2 muỗng nước, khuấy đều đến khi có màu cánh gián đẹp." },
+                { title: "Kho thịt", time: "40 phút", desc: "Thịt trụng sơ, cho vào nồi với nước màu, nước mắm, nước dừa, hành tỏi. Kho nhỏ lửa 40 phút." },
+                { title: "Thêm trứng vào kho", time: "10 phút", desc: "Cho trứng vào nồi kho cùng 10 phút cuối. Trở trứng để thấm đều màu." },
+                { title: "Hoàn thành & thưởng thức", time: "5 phút", desc: "Nêm nếm lại vị đậm đà, rắc tiêu. Ăn nóng với cơm trắng và dưa leo." }
+            ]
+        },
+        {
+            name: "Đậu hũ sốt cà chua", emoji: "🍅",
+            tags: ["món chay","đậu hũ","cà chua","dễ nấu","cơm","chay"],
+            desc: "Đậu hũ chiên vàng, sốt cà chua chua ngọt, ăn với cơm trắng.",
+            time: 20, kcal: 280, servings: 3,
+            ingredients: [
+                { icon: "🧊", name: "Đậu hũ non", qty: 4, unit: "miếng", note: "cắt vuông" },
+                { icon: "🍅", name: "Cà chua chín", qty: 3, unit: "trái", note: "băm nhuyễn" },
+                { icon: "🌿", name: "Hành lá", qty: 3, unit: "nhánh", note: "cắt nhỏ" },
+                { icon: "🧄", name: "Tỏi băm", qty: 3, unit: "tép", note: "phi thơm" },
+                { icon: "🥫", name: "Nước tương", qty: 2, unit: "muỗng", note: "loại ngon" },
+                { icon: "🍬", name: "Đường + Muối", qty: 1, unit: "muỗng", note: "nêm vừa" },
+                { icon: "🌽", name: "Bột năng", qty: 1, unit: "muỗng", note: "pha nước" },
+                { icon: "🫒", name: "Dầu ăn", qty: 3, unit: "muỗng", note: "chiên đậu" }
+            ],
+            nutrition: { protein: 18, carb: 22, fat: 14, fiber: 6 },
+            steps: [
+                { title: "Chiên đậu hũ vàng", time: "8 phút", desc: "Đậu hũ cắt miếng vuông 3cm, chiên ngập dầu đến khi vàng đều 4 mặt. Vớt ra giấy thấm dầu." },
+                { title: "Xào cà chua nhuyễn", time: "5 phút", desc: "Phi tỏi thơm với dầu, cho cà chua băm vào xào nhuyễn, thêm chút muối cho mau mềm." },
+                { title: "Nêm sốt chua ngọt", time: "3 phút", desc: "Thêm nước tương, đường, 100ml nước. Hòa bột năng với nước, đổ từ từ tạo độ sánh." },
+                { title: "Cho đậu hũ vào sốt", time: "3 phút", desc: "Cho đậu hũ vào sốt, đảo nhẹ tay, đun nhỏ lửa 3 phút cho thấm đều gia vị." },
+                { title: "Hoàn thành", time: "1 phút", desc: "Rắc hành lá, tiêu. Ăn nóng với cơm trắng, có thể thêm ớt tươi." }
+            ]
+        },
+        {
+            name: "Trứng ốp la", emoji: "🍳",
+            tags: ["sáng","trứng","nhanh","bánh mì"],
+            desc: "Trứng ốp la với hành, ăn kèm bánh mì hoặc cơm.",
+            time: 8, kcal: 220, servings: 1,
+            ingredients: [
+                { icon: "🥚", name: "Trứng gà", qty: 2, unit: "quả", note: "loại tươi" },
+                { icon: "🌿", name: "Hành lá", qty: 2, unit: "nhánh", note: "cắt nhỏ" },
+                { icon: "🫒", name: "Dầu ăn", qty: 1, unit: "muỗng", note: "đủ nóng" },
+                { icon: "🥖", name: "Bánh mì", qty: 1, unit: "ổ", note: "nướng giòn" },
+                { icon: "🧂", name: "Muối + Tiêu", qty: 1, unit: "nhúm", note: "nêm vừa" }
+            ],
+            nutrition: { protein: 14, carb: 4, fat: 16, fiber: 1 },
+            steps: [
+                { title: "Đun nóng chảo", time: "2 phút", desc: "Cho dầu ăn vào chảo, đun nóng già để trứng không dính và viền giòn." },
+                { title: "Đập trứng vào chảo", time: "1 phút", desc: "Đập trứng nhẹ tay, để lòng đỏ nguyên vẹn. Rắc muối tiêu." },
+                { title: "Chiên lửa vừa", time: "3 phút", desc: "Chiên lửa vừa, viền trứng giòn vàng, lòng đỏ còn mềm ửng hồng." },
+                { title: "Thêm hành lá", time: "30 giây", desc: "Rắc hành lá cắt nhỏ lên mặt trứng, tắt bếp." },
+                { title: "Thưởng thức", time: "1 phút", desc: "Ăn kèm bánh mì nướng giòn hoặc cơm trắng. Thêm nước tương nếu thích." }
+            ]
+        },
+        {
+            name: "Bò lúc lắc", emoji: "🥩",
+            tags: ["bò","xào","lúc lắc","cơm","tối"],
+            desc: "Bò mềm xào cùng hành tây, ớt chuông, ăn kèm cơm hoặc khoai tây.",
+            time: 25, kcal: 480, servings: 2,
+            ingredients: [
+                { icon: "🥩", name: "Thăn bò", qty: 400, unit: "g", note: "khối 2cm" },
+                { icon: "🧅", name: "Hành tây", qty: 1, unit: "củ", note: "khối vuông" },
+                { icon: "🫑", name: "Ớt chuông đỏ + xanh", qty: 2, unit: "trái", note: "khối vuông" },
+                { icon: "🧄", name: "Tỏi băm", qty: 4, unit: "tép", note: "phi thơm" },
+                { icon: "🥫", name: "Dầu hào", qty: 2, unit: "muỗng", note: "ướp bò" },
+                { icon: "🍬", name: "Đường + Tiêu", qty: 1, unit: "muỗng", note: "nêm vừa" },
+                { icon: "🫒", name: "Dầu ăn + Bơ", qty: 2, unit: "muỗng", note: "xào bò" }
+            ],
+            nutrition: { protein: 36, carb: 16, fat: 26, fiber: 3 },
+            steps: [
+                { title: "Ướp bò 10 phút", time: "10 phút", desc: "Bò cắt khối vuông 2cm, ướp dầu hào, tỏi băm, tiêu, chút đường và dầu ăn. Trộn đều." },
+                { title: "Sơ chế rau củ", time: "5 phút", desc: "Hành tây, ớt chuông cắt khối vuông đều 2cm bằng thịt bò để trình bày đẹp." },
+                { title: "Xào bò lửa lớn", time: "4 phút", desc: "Đun chảo thật nóng, cho bơ + dầu. Xào bò nhanh tay 2 phút cho chín tái. Vớt ra." },
+                { title: "Xào rau củ", time: "3 phút", desc: "Cho hành tây, ớt chuông vào xào 2 phút, nêm chút muối, giữ độ giòn." },
+                { title: "Hoàn thành", time: "2 phút", desc: "Cho bò lại chảo, trộn đều với rau, rắc tiêu. Ăn nóng với cơm hoặc khoai tây chiên." }
+            ]
+        },
+        {
+            name: "Tôm rang muối", emoji: "🦐",
+            tags: ["tôm","rang","muối","cơm","tối","hải sản"],
+            desc: "Tôm tươi rang muối hạt, vỏ giòn, thịt ngọt.",
+            time: 20, kcal: 320, servings: 3,
+            ingredients: [
+                { icon: "🦐", name: "Tôm sú tươi", qty: 500, unit: "g", note: "còn vỏ" },
+                { icon: "🧂", name: "Muối hạt to", qty: 2, unit: "muỗng", note: "rang chung" },
+                { icon: "🧄", name: "Tỏi băm", qty: 4, unit: "tép", note: "phi thơm" },
+                { icon: "🌶️", name: "Ớt băm + Tiêu", qty: 2, unit: "trái", note: "tùy khẩu vị" },
+                { icon: "🫒", name: "Dầu ăn", qty: 2, unit: "muỗng", note: "đủ rang" },
+                { icon: "🍬", name: "Đường", qty: 1, unit: "muỗng", note: "cân vị" }
+            ],
+            nutrition: { protein: 30, carb: 8, fat: 14, fiber: 1 },
+            steps: [
+                { title: "Sơ chế tôm", time: "5 phút", desc: "Tôm rửa sạch, cắt râu, chừa vỏ. Để ráo nước. Ướp chút muối tiêu." },
+                { title: "Rang muối hạt", time: "3 phút", desc: "Rang muối hạt với tỏi băm, ớt băm trên lửa nhỏ cho thơm vàng." },
+                { title: "Rang tôm chín giòn", time: "8 phút", desc: "Cho tôm vào rang cùng muối, đảo đều tay trên lửa vừa đến khi vỏ tôm giòn đỏ." },
+                { title: "Nêm nếm", time: "2 phút", desc: "Thêm chút đường, tiêu. Đảo đều cho gia vị thấm. Nêm lại vừa ăn." },
+                { title: "Hoàn thành & thưởng thức", time: "2 phút", desc: "Rắc hành lá, ớt tươi cắt lát. Ăn nóng với cơm trắng và rau sống." }
+            ]
+        },
+        {
+            name: "Gà chiên nước mắm", emoji: "🍗",
+            tags: ["gà","chiên","nước mắm","cơm","tối"],
+            desc: "Gà chiên giòn rồi xóc nước mắm tỏi ớt, đậm vị.",
+            time: 40, kcal: 520, servings: 3,
+            ingredients: [
+                { icon: "🍗", name: "Gà ta (đùi + cánh)", qty: 800, unit: "g", note: "chặt miếng" },
+                { icon: "🍯", name: "Nước mắm ngon", qty: 4, unit: "muỗng", note: "loại 40 độ" },
+                { icon: "🧄", name: "Tỏi băm", qty: 5, unit: "tép", note: "chia 2 phần" },
+                { icon: "🌶️", name: "Ớt băm", qty: 3, unit: "trái", note: "tùy khẩu vị" },
+                { icon: "🍬", name: "Đường", qty: 2, unit: "muỗng", note: "cân vị" },
+                { icon: "🌾", name: "Bột chiên giòn", qty: 100, unit: "g", note: "áo gà" },
+                { icon: "🫒", name: "Dầu ăn", qty: 300, unit: "ml", note: "chiên ngập" },
+                { icon: "🌿", name: "Hành lá + Ngò", qty: 3, unit: "nhánh", note: "trang trí" }
+            ],
+            nutrition: { protein: 34, carb: 18, fat: 30, fiber: 1 },
+            steps: [
+                { title: "Sơ chế gà", time: "10 phút", desc: "Gà rửa sạch với muối, chặt miếng vừa ăn. Ướp muối, tiêu, tỏi băm 15 phút." },
+                { title: "Lăn bột chiên", time: "5 phút", desc: "Lăn gà qua bột chiên giòn đều các mặt, lắc nhẹ để bột không dày." },
+                { title: "Chiên gà vàng giòn", time: "15 phút", desc: "Đun dầu nóng 170°C, chiên gà đến khi vàng giòn đều. Vớt ra giấy thấm dầu." },
+                { title: "Pha sốt nước mắm", time: "5 phút", desc: "Pha nước mắm + đường + tỏi + ớt băm. Đun sôi nhẹ cho tan đường." },
+                { title: "Xóc gà với sốt", time: "3 phút", desc: "Cho gà vào chảo, đổ sốt vào xóc đều tay đến khi sốt bám đều. Rắc hành lá." }
+            ]
+        },
+        {
+            name: "Bánh mì thịt", emoji: "🥖",
+            tags: ["món việt","bánh mì","sáng","thịt","nhanh"],
+            desc: "Bánh mì giòn kẹp thịt nguội, chả, dưa leo, đồ chua.",
+            time: 10, kcal: 400, servings: 1,
+            ingredients: [
+                { icon: "🥖", name: "Bánh mì Việt", qty: 1, unit: "ổ", note: "vỏ giòn" },
+                { icon: "🥩", name: "Thịt nguội (chả lụa)", qty: 80, unit: "g", note: "thái lát" },
+                { icon: "🥓", name: "Chả lụa", qty: 50, unit: "g", note: "thái lát" },
+                { icon: "🥒", name: "Dưa leo", qty: 0.5, unit: "trái", note: "thái lát dọc" },
+                { icon: "🥕", name: "Đồ chua (cà rốt + củ cải)", qty: 50, unit: "g", note: "ngâm chua ngọt" },
+                { icon: "🌿", name: "Ngò + Ớt", qty: 3, unit: "nhánh", note: "tùy khẩu vị" },
+                { icon: "🥫", name: "Pate gan", qty: 1, unit: "muỗng", note: "phết bánh" },
+                { icon: "🥫", name: "Maggi + Tiêu", qty: 1, unit: "muỗng", note: "tăng vị" }
+            ],
+            nutrition: { protein: 20, carb: 45, fat: 18, fiber: 3 },
+            steps: [
+                { title: "Nướng bánh mì", time: "3 phút", desc: "Nướng bánh mì trên lửa nhỏ cho vỏ giòn, ruột mềm nóng. Không nướng quá khô." },
+                { title: "Sơ chế rau", time: "2 phút", desc: "Dưa leo thái lát dọc mỏng. Đồ chua (cà rốt, củ cải) thái sợi ngâm sẵn." },
+                { title: "Cắt bánh mì phết pate", time: "1 phút", desc: "Cắt dọc bánh mì không đứt rời. Phết đều pate gan, thêm chút maggi." },
+                { title: "Xếp nhân vào bánh", time: "3 phút", desc: "Xếp thịt nguội, chả lụa, dưa leo, đồ chua, ngò, ớt vào bánh. Đầy đặn." },
+                { title: "Thưởng thức", time: "1 phút", desc: "Rưới chút nước tương hoặc maggi, rắc tiêu. Ăn ngay khi bánh còn nóng giòn." }
+            ]
+        }
+    ];
+
+    // ========== CONTEXT ==========
+    const ctx = { time: 'sáng', weather: 'nóng', people: 2, diet: 'bình thường' };
+    function getAutoMeal() {
+        const h = new Date().getHours();
+        if (h < 10) return 'sáng';
+        if (h < 15) return 'trưa';
+        return 'tối';
+    }
+    ctx.time = getAutoMeal();
+
+    function updateContextUI() {
+        document.getElementById('timeLabel').textContent = 'Bữa ' + ctx.time;
+        document.getElementById('timeIcon').textContent = ctx.time === 'sáng' ? '🌅' : ctx.time === 'trưa' ? '☀️' : '🌙';
+        document.getElementById('weatherLabel').textContent = ctx.weather === 'nóng' ? 'Trời nóng' : ctx.weather === 'mát' ? 'Trời mát' : 'Trời lạnh';
+        document.getElementById('weatherIcon').textContent = ctx.weather === 'nóng' ? '☀️' : ctx.weather === 'mát' ? '⛅' : '❄️';
+        document.getElementById('peopleLabel').textContent = ctx.people + ' người';
+        document.getElementById('dietLabel').textContent = ctx.diet === 'bình thường' ? 'Bình thường' : ctx.diet === 'healthy' ? 'Healthy' : 'Món chay';
+    }
+    updateContextUI();
+
+    document.querySelectorAll('.context-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const type = item.dataset.ctx;
+            if (type === 'time') {
+                const arr = ['sáng','trưa','tối'];
+                ctx.time = arr[(arr.indexOf(ctx.time) + 1) % arr.length];
+            } else if (type === 'weather') {
+                const arr = ['nóng','mát','lạnh'];
+                ctx.weather = arr[(arr.indexOf(ctx.weather) + 1) % arr.length];
+            } else if (type === 'people') {
+                ctx.people = ctx.people >= 6 ? 1 : ctx.people + 1;
+            } else if (type === 'diet') {
+                const arr = ['bình thường','healthy','chay'];
+                ctx.diet = arr[(arr.indexOf(ctx.diet) + 1) % arr.length];
+            }
+            item.classList.add('active');
+            updateContextUI();
+            showToast(`Đã chọn: ${item.querySelector('.context-label').textContent}`);
+            if (navigator.vibrate) navigator.vibrate(20);
+        });
+    });
+
+    const toastEl = document.getElementById('toast');
+    let toastTimeout;
+    function showToast(text) {
+        toastEl.textContent = text;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+
+    // ========== AI ANALYSIS ==========
+    function analyze(text) {
+        const q = text.toLowerCase().trim();
+        const words = q ? q.split(/\s+/).filter(w => w.length >= 2) : [];
+
+        const analysisLines = [
+            { icon: '🕐', label: 'Thời gian', value: `Bữa ${ctx.time}` },
+            { icon: '🌡️', label: 'Thời tiết', value: ctx.weather === 'nóng' ? 'Nóng (>30°C)' : ctx.weather === 'mát' ? 'Mát (20-30°C)' : 'Lạnh (<20°C)' },
+            { icon: '👥', label: 'Số người', value: `${ctx.people} người` },
+            { icon: '🥗', label: 'Chế độ', value: ctx.diet === 'bình thường' ? 'Bình thường' : ctx.diet === 'healthy' ? 'Healthy / ít calo' : 'Món chay' }
+        ];
+        if (q) analysisLines.push({ icon: '💬', label: 'Yêu cầu', value: text });
+
+        const scored = foodDB.map(food => {
+            let score = 0;
+            const nameL = food.name.toLowerCase();
+            const descL = food.desc.toLowerCase();
+            const tagsL = food.tags.map(t => t.toLowerCase());
+
+            if (q) {
+                if (nameL.includes(q)) score += 25;
+                words.forEach(w => {
+                    if (tagsL.some(t => t.includes(w) || w.includes(t))) score += 8;
+                    if (nameL.includes(w)) score += 10;
+                    if (descL.includes(w)) score += 3;
+                });
+                const matchedTags = words.filter(w => tagsL.some(t => t.includes(w))).length;
+                if (matchedTags >= 2) score += matchedTags * 5;
+            }
+
+            if (food.tags.some(t => t.includes(ctx.time))) score += 15;
+            if (food.tags.some(t => t.includes(ctx.weather))) score += 12;
+            if (ctx.diet === 'chay' && food.tags.includes('chay')) score += 25;
+            else if (ctx.diet === 'chay' && !food.tags.includes('chay')) score -= 30;
+            if (ctx.diet === 'healthy' && food.tags.includes('healthy')) score += 20;
+            if (ctx.diet === 'bình thường') score += 5;
+            if (food.time <= 20) score += 3;
+
+            score += Math.random() * 3;
+            return { food, score };
+        });
+
+        scored.sort((a, b) => b.score - a.score);
+        let top = scored.filter(s => s.score > 10).slice(0, 3);
+        if (top.length === 0) top = [...scored].sort(() => Math.random() - 0.5).slice(0, 2);
+
+        const maxScore = top[0]?.score || 1;
+        top = top.map((t, i) => ({
+            ...t,
+            matchPercent: Math.min(99, Math.round(60 + (t.score / maxScore) * 35) + (i === 0 ? 4 : 0))
+        }));
+
+        return { analysisLines, foods: top };
+    }
+
+    // ========== RENDER ==========
+    const chatEl = document.getElementById('chat');
+    const inputEl = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function scrollBottom() {
+        requestAnimationFrame(() => chatEl.scrollTo({ top: chatEl.scrollHeight, behavior: 'smooth' }));
+    }
+
+    function addMsg(html, who) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + who;
+        div.innerHTML = `<div class="msg-avatar">${who === 'ai' ? '🤖' : '👤'}</div><div class="bubble">${html}</div>`;
+        chatEl.appendChild(div);
+        scrollBottom();
+    }
+
+    function addFoodResponse(analysisLines, foods) {
+        const div = document.createElement('div');
+        div.className = 'msg ai';
+
+        const analysisHtml = analysisLines.map(l => `
+            <div class="analysis-row">
+                <span>${l.icon}</span>
+                <span class="analysis-label">${l.label}:</span>
+                <span>${l.value}</span>
+            </div>
+        `).join('');
+
+        const cardsHtml = foods.map((item, i) => {
+            const f = item.food;
+            return `
+                <div class="food-card" data-idx="${i}">
+                    <div class="food-thumb">${f.emoji}</div>
+                    <div class="food-info">
+                        <div class="food-name">
+                            ${f.name}
+                            <span class="food-match">${item.matchPercent}% match</span>
+                        </div>
+                        <div class="food-desc">${f.desc}</div>
+                        <div class="food-meta">
+                            <span>⏱️ ${f.time}p</span>
+                            <span>🔥 ${f.kcal} kcal</span>
+                            <span>👥 ${f.servings}</span>
+                            <span>🥘 ${f.ingredients.length} NL</span>
+                        </div>
+                    </div>
+                    ${i === 0 ? '<div class="food-badge">TOP</div>' : ''}
+                </div>
+            `;
+        }).join('');
+
+        div.innerHTML = `
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+                <div class="analysis-block">
+                    <div style="font-weight:700;margin-bottom:4px;color:#7dd3c0;">📊 Phân tích ngữ cảnh</div>
+                    ${analysisHtml}
+                </div>
+                <div style="font-size:12.5px;margin-bottom:6px;">✨ <b>${foods.length} gợi ý tối ưu</b> cho bạn:</div>
+                <div class="food-cards">${cardsHtml}</div>
+                <div style="margin-top:10px;font-size:10.5px;color:#8a92a8;">💡 Chạm vào món để xem bếp 3D + định lượng + mô phỏng nấu</div>
+            </div>
+        `;
+        chatEl.appendChild(div);
+        scrollBottom();
+
+        div.querySelectorAll('.food-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const idx = parseInt(card.dataset.idx);
+                openModal(foods[idx].food, foods[idx].matchPercent);
+            });
+        });
+    }
+
+    // ========== MODAL ==========
+    const modal = document.getElementById('modal');
+    const modalEmoji = document.getElementById('modalEmoji');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalTags = document.getElementById('modalTags');
+    const statTime = document.getElementById('statTime');
+    const statKcal = document.getElementById('statKcal');
+    const statMatch = document.getElementById('statMatch');
+    const statServings = document.getElementById('statServings');
+    const ingredientsList = document.getElementById('ingredientsList');
+    const servingsLabel = document.getElementById('servingsLabel');
+    const stepsContainer = document.getElementById('stepsContainer');
+    const modalBtn = document.getElementById('modalBtn');
+
+    // Kitchen sim elements
+    const panContent = document.getElementById('panContent');
+    const pan3D = document.getElementById('pan3D');
+    const fire3D = document.getElementById('fire3D');
+    const steam3D = document.getElementById('steam3D');
+    const stove = document.getElementById('stove');
+    const aiChef = document.getElementById('aiChef');
+    const kitchenScene = document.getElementById('kitchenScene');
+    const simStatusText = document.getElementById('simStatusText');
+    const simProgress = document.getElementById('simProgress');
+    const simStartBtn = document.getElementById('simStartBtn');
+    const simResetBtn = document.getElementById('simResetBtn');
+    const simSpeedBtn = document.getElementById('simSpeedBtn');
+    const pulseDot = document.getElementById('pulseDot');
+    const hudStage = document.getElementById('hudStage');
+    const hudTimer = document.getElementById('hudTimer');
+
+    let currentFood = null;
+    let currentMatch = 0;
+    let currentServings = 2;
+    let simTimeouts = [];
+    let simRunning = false;
+    let simSpeed = 1;
+    let simTimerInterval = null;
+    let simElapsed = 0;
+
+    function scaleQty(qty, baseServings, targetServings) {
+        return (qty * targetServings / baseServings);
+    }
+
+    function formatQty(qty) {
+        if (Number.isInteger(qty)) return qty;
+        if (qty < 1) return qty.toFixed(2).replace(/\.?0+$/, '');
+        return qty.toFixed(1).replace(/\.0$/, '');
+    }
+
+    function renderIngredients() {
+        if (!currentFood) return;
+        const baseServings = currentFood.servings;
+        const target = currentServings;
+        servingsLabel.textContent = target;
+
+        ingredientsList.innerHTML = currentFood.ingredients.map(ing => {
+            const scaled = scaleQty(ing.qty, baseServings, target);
+            return `
+                <div class="ingredient-row">
+                    <div class="ing-icon-wrap">${ing.icon}</div>
+                    <div class="ing-info">
+                        <div class="ing-name-txt">${ing.name}</div>
+                        <div class="ing-qty">
+                            <span class="ing-qty-num">${formatQty(scaled)} ${ing.unit}</span>
+                            ${ing.note ? `<span class="ing-note">• ${ing.note}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function openModal(food, matchPercent) {
+        currentFood = food;
+        currentMatch = matchPercent;
+        currentServings = ctx.people;
+
+        modalEmoji.textContent = food.emoji;
+        modalTitle.textContent = food.name;
+        statTime.textContent = food.time + 'p';
+        statKcal.textContent = Math.round(food.kcal * currentServings / food.servings);
+        statMatch.textContent = matchPercent + '%';
+        statServings.textContent = currentServings;
+
+        modalTags.innerHTML = food.tags.slice(0, 4).map(t => `<span class="modal-tag">#${t}</span>`).join('');
+
+        renderIngredients();
+
+        // Nutrition
+        const n = food.nutrition;
+        const maxN = Math.max(n.protein, n.carb, n.fat, n.fiber, 40);
+        setTimeout(() => {
+            document.getElementById('nutriProtein').style.width = Math.min(100, (n.protein / maxN) * 100) + '%';
+            document.getElementById('nutriCarb').style.width = Math.min(100, (n.carb / maxN) * 100) + '%';
+            document.getElementById('nutriFat').style.width = Math.min(100, (n.fat / maxN) * 100) + '%';
+            document.getElementById('nutriFiber').style.width = Math.min(100, (n.fiber / maxN) * 100) + '%';
+            document.getElementById('nutriProteinVal').textContent = n.protein + 'g';
+            document.getElementById('nutriCarbVal').textContent = n.carb + 'g';
+            document.getElementById('nutriFatVal').textContent = n.fat + 'g';
+            document.getElementById('nutriFiberVal').textContent = n.fiber + 'g';
+        }, 200);
+
+        // Steps
+        stepsContainer.innerHTML = food.steps.map((s, i) => `
+            <div class="step-card" data-step="${i}">
+                <div class="step-num">${i + 1}</div>
+                <div class="step-content">
+                    <div class="step-title">${s.title} <span class="step-time">⏱ ${s.time}</span></div>
+                    <div class="step-desc">${s.desc}</div>
+                </div>
+            </div>
+        `).join('');
+
+        resetSimulation();
+        modal.classList.add('show');
+        if (navigator.vibrate) navigator.vibrate(30);
+    }
+
+    function resetSimulation() {
+        simTimeouts.forEach(t => clearTimeout(t));
+        simTimeouts = [];
+        if (simTimerInterval) clearInterval(simTimerInterval);
+        simTimerInterval = null;
+        simRunning = false;
+        simElapsed = 0;
+
+        panContent.textContent = '🍳';
+        pan3D.classList.remove('shake');
+        fire3D.classList.remove('on');
+        steam3D.classList.remove('on');
+        stove.classList.remove('on');
+        aiChef.className = 'ai-chef';
+        aiChef.textContent = '👨‍🍳';
+        simProgress.style.width = '0%';
+        simStatusText.textContent = 'Nhấn "Bắt đầu nấu" để AI thao tác trong bếp 3D';
+        pulseDot.style.display = 'none';
+        hudStage.textContent = 'Chờ bắt đầu';
+        hudTimer.textContent = '⏱️ 0s';
+        simStartBtn.disabled = false;
+        simStartBtn.innerHTML = '▶ Bắt đầu nấu';
+
+        document.querySelectorAll('.flying-3d').forEach(el => el.remove());
+        document.querySelectorAll('.spice-particle').forEach(el => el.remove());
+        document.querySelectorAll('.step-card').forEach(el => el.classList.remove('active', 'done'));
+    }
+
+    function getStepEffect(stepIndex, food) {
+        // Trả về: { fire, steam, stove, panContent, chefClass, chefEmoji, flyCount, spice, duration }
+        const totalSteps = food.steps.length;
+        const effects = [];
+
+        // Bước 1: Chuẩn bị (lửa nhỏ, hơi nước)
+        effects.push({
+            fire: true, steam: false, stove: true, panContent: '🍲',
+            chefClass: 'cooking', chefEmoji: '👨‍🍳',
+            flyCount: 0, spice: false, duration: 2500,
+            stage: 'Sơ chế nguyên liệu'
+        });
+
+        // Bước 2: Nêm/xào (lửa vừa, nguyên liệu bay)
+        effects.push({
+            fire: true, steam: true, stove: true, panContent: '🥩',
+            chefClass: 'sprinkle', chefEmoji: '👨‍🍳',
+            flyCount: 3, spice: true, duration: 3000,
+            stage: 'Nêm gia vị'
+        });
+
+        // Bước 3: Nấu chính (lửa lớn, chảo rung)
+        effects.push({
+            fire: true, steam: true, stove: true, panContent: '🔥',
+            chefClass: 'stir', chefEmoji: '👨‍🍳',
+            flyCount: 2, spice: false, duration: 3500,
+            stage: 'Nấu chính'
+        });
+
+        // Bước 4: Hoàn thiện
+        effects.push({
+            fire: true, steam: false, stove: true, panContent: '🍳',
+            chefClass: 'cooking', chefEmoji: '👨‍🍳',
+            flyCount: 1, spice: false, duration: 2500,
+            stage: 'Hoàn thiện'
+        });
+
+        // Bước 5: Trang trí & dọn
+        effects.push({
+            fire: false, steam: true, stove: false, panContent: food.emoji,
+            chefClass: '', chefEmoji: '👨‍🍳',
+            flyCount: 0, spice: false, duration: 2000,
+            stage: 'Trang trí món'
+        });
+
+        return effects[Math.min(stepIndex, effects.length - 1)];
+    }
+
+    function applyEffect(effect) {
+        // Fire
+        if (effect.fire) { fire3D.classList.add('on'); stove.classList.add('on'); }
+        else { fire3D.classList.remove('on'); stove.classList.remove('on'); }
+
+        // Steam
+        if (effect.steam) steam3D.classList.add('on');
+        else steam3D.classList.remove('on');
+
+        // Pan content
+        panContent.textContent = effect.panContent;
+
+        // Chef animation
+        aiChef.className = 'ai-chef ' + (effect.chefClass || '');
+        aiChef.textContent = effect.chefEmoji;
+
+        // Shake pan
+        if (effect.chefClass === 'stir') {
+            pan3D.classList.add('shake');
+            setTimeout(() => pan3D.classList.remove('shake'), 500);
+        }
+
+        // Fly ingredients
+        if (effect.flyCount > 0) flyIngredients(effect.flyCount);
+
+        // Spice particles
+        if (effect.spice) sprinkleSpice();
+
+        // HUD
+        hudStage.textContent = effect.stage;
+    }
+
+    function flyIngredients(count) {
+        if (!currentFood) return;
+        const rect = kitchenScene.getBoundingClientRect();
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const targetX = rect.width / 2 - 20;
+        const targetY = rect.height - 130;
+
+        const ings = currentFood.ingredients.slice(0, count);
+        ings.forEach((ing, i) => {
+            const el = document.createElement('div');
+            el.className = 'flying-3d';
+            el.textContent = ing.icon;
+
+            const startX = i % 2 === 0 ? 40 : rect.width - 40;
+            const startY = 80 + i * 15;
+
+            el.style.left = startX + 'px';
+            el.style.top = startY + 'px';
+
+            // Set CSS variables for arc
+            const mx = targetX - startX;
+            const my = targetY - startY;
+            el.style.setProperty('--mx', mx + 'px');
+            el.style.setProperty('--my', my + 'px');
+
+            kitchenScene.appendChild(el);
+            requestAnimationFrame(() => el.classList.add('fly'));
+            setTimeout(() => el.remove(), 1500);
+        });
+    }
+
+    function sprinkleSpice() {
+        const rect = kitchenScene.getBoundingClientRect();
+        for (let i = 0; i < 12; i++) {
+            const p = document.createElement('div');
+            p.className = 'spice-particle';
+            const startX = rect.width / 2 - 30 + Math.random() * 60;
+            const startY = 60 + Math.random() * 20;
+            p.style.left = startX + 'px';
+            p.style.top = startY + 'px';
+            p.style.background = ['#ffd93d', '#ff7a3d', '#ff477e', '#00d4aa'][Math.floor(Math.random() * 4)];
+            p.style.boxShadow = `0 0 8px ${p.style.background}`;
+
+            const dx = (Math.random() - 0.5) * 60;
+            const dy = 80 + Math.random() * 40;
+            p.style.setProperty('--dx', dx + 'px');
+            p.style.setProperty('--dy', dy + 'px');
+
+            kitchenScene.appendChild(p);
+            setTimeout(() => p.classList.add('fall'), 50 + i * 30);
+            setTimeout(() => p.remove(), 1200);
+        }
+    }
+
+    function startSimulation() {
+        if (!currentFood || simRunning) return;
+        simRunning = true;
+        simElapsed = 0;
+        simStartBtn.disabled = true;
+        simStartBtn.innerHTML = '⏳ Đang nấu...';
+        pulseDot.style.display = 'inline-block';
+
+        const steps = currentFood.steps;
+        const totalSteps = steps.length;
+        const baseDuration = 3000 / simSpeed;
+
+        // Timer
+        simTimerInterval = setInterval(() => {
+            simElapsed += 0.1 * simSpeed;
+            hudTimer.textContent = '⏱️ ' + Math.round(simElapsed) + 's';
+        }, 100);
+
+        steps.forEach((step, i) => {
+            const effect = getStepEffect(i, currentFood);
+            const stepDuration = effect.duration / simSpeed;
+
+            const t1 = setTimeout(() => {
+                const stepEl = document.querySelector(`.step-card[data-step="${i}"]`);
+                if (stepEl) stepEl.classList.add('active');
+                if (i > 0) {
+                    const prevEl = document.querySelector(`.step-card[data-step="${i-1}"]`);
+                    if (prevEl) { prevEl.classList.remove('active'); prevEl.classList.add('done'); }
+                }
+                simStatusText.textContent = `Bước ${i+1}/${totalSteps}: ${step.title}`;
+                simProgress.style.width = ((i + 0.5) / totalSteps * 100) + '%';
+                applyEffect(effect);
+
+                if (stepEl) stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, i * stepDuration);
+            simTimeouts.push(t1);
+
+            const t2 = setTimeout(() => {
+                const stepEl = document.querySelector(`.step-card[data-step="${i}"]`);
+                if (stepEl) { stepEl.classList.remove('active'); stepEl.classList.add('done'); }
+                simProgress.style.width = ((i + 1) / totalSteps * 100) + '%';
+
+                if (i === totalSteps - 1) {
+                    simRunning = false;
+                    if (simTimerInterval) clearInterval(simTimerInterval);
+                    simStartBtn.disabled = false;
+                    simStartBtn.innerHTML = '🔁 Nấu lại';
+                    simStatusText.textContent = '✅ Hoàn thành! Món ăn đã sẵn sàng';
+                    panContent.textContent = currentFood.emoji;
+                    steam3D.classList.add('on');
+                    fire3D.classList.remove('on');
+                    stove.classList.remove('on');
+                    aiChef.className = 'ai-chef';
+                    aiChef.textContent = '😋';
+                    pulseDot.style.display = 'none';
+                    hudStage.textContent = 'Hoàn thành';
+                    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+                    showToast('🎉 Món ăn đã hoàn thành!');
+                }
+            }, (i + 1) * stepDuration - 100);
+            simTimeouts.push(t2);
+        });
+    }
+
+    simStartBtn.addEventListener('click', startSimulation);
+    simResetBtn.addEventListener('click', () => {
+        resetSimulation();
+        if (navigator.vibrate) navigator.vibrate(15);
+    });
+    simSpeedBtn.addEventListener('click', () => {
+        simSpeed = simSpeed === 1 ? 2 : simSpeed === 2 ? 3 : 1;
+        simSpeedBtn.textContent = simSpeed + 'x';
+        showToast(`Tốc độ: ${simSpeed}x`);
+    });
+
+    // Smart actions
+    document.getElementById('actionShopping')?.addEventListener('click', () => {
+        if (!currentFood) return;
+        const list = currentFood.ingredients.map(ing => {
+            const scaled = scaleQty(ing.qty, currentFood.servings, currentServings);
+            return `${ing.icon} ${ing.name}: ${formatQty(scaled)} ${ing.unit} (${ing.note || ''})`;
+        }).join('\n');
+        const text = `🛒 DANH SÁCH ĐI CHỢ\nMón: ${currentFood.name}\nKhẩu phần: ${currentServings} người\n\n${list}`;
+        if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+        showToast('🛒 Đã copy danh sách đi chợ!');
+        if (navigator.vibrate) navigator.vibrate(20);
+    });
+
+    document.getElementById('actionShare')?.addEventListener('click', () => {
+        if (!currentFood) return;
+        const shareText = `🍽️ ${currentFood.name} - ${currentFood.kcal} kcal/khẩu phần\n${currentFood.desc}\n\nNguyên liệu chính: ${currentFood.ingredients.length} loại\nThời gian: ${currentFood.time} phút`;
+        if (navigator.share) {
+            navigator.share({ title: currentFood.name, text: shareText }).catch(() => {});
+        } else {
+            if (navigator.clipboard) navigator.clipboard.writeText(shareText).catch(() => {});
+            showToast('📤 Đã copy để chia sẻ!');
+        }
+    });
+
+    document.getElementById('actionSave')?.addEventListener('click', function() {
+        if (!currentFood) return;
+        this.querySelector('.action-icon').textContent = '💖';
+        showToast('❤️ Đã thêm vào yêu thích!');
+        if (navigator.vibrate) navigator.vibrate(20);
+    });
+
+    document.getElementById('actionScale')?.addEventListener('click', () => {
+        if (!currentFood) return;
+        currentServings = currentServings >= 6 ? 1 : currentServings + 1;
+        statServings.textContent = currentServings;
+        statKcal.textContent = Math.round(currentFood.kcal * currentServings / currentFood.servings);
+        renderIngredients();
+        showToast(`⚖️ Đã đổi thành ${currentServings} người`);
+        if (navigator.vibrate) navigator.vibrate(20);
+    });
+
+    modalBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        resetSimulation();
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            resetSimulation();
+        }
+    });
+
+    // Typing
+    let typingEl = null;
+    function showTyping() {
+        if (typingEl) return;
+        typingEl = document.createElement('div');
+        typingEl.className = 'msg ai';
+        typingEl.innerHTML = `
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="typing"><span></span><span></span><span></span></div>
+                    <span style="font-size:10.5px;color:#8a92a8;">Đang phân tích chuyên sâu...</span>
+                </div>
+            </div>
+        `;
+        chatEl.appendChild(typingEl);
+        scrollBottom();
+    }
+    function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
+
+    async function send(text) {
+        text = text.trim();
+        if (!text) return;
+        addMsg(text, 'user');
+        inputEl.value = '';
+        sendBtn.disabled = true;
+        showTyping();
+        await new Promise(r => setTimeout(r, 1100 + Math.random() * 700));
+        hideTyping();
+        const result = analyze(text);
+        addFoodResponse(result.analysisLines, result.foods);
+        sendBtn.disabled = false;
+        inputEl.focus();
+        if (navigator.vibrate) navigator.vibrate([15, 30, 15]);
+    }
+
+    sendBtn.addEventListener('click', () => send(inputEl.value));
+    inputEl.addEventListener('keypress', e => {
+        if (e.key === 'Enter') { e.preventDefault(); send(inputEl.value); }
+    });
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const q = chip.dataset.q;
+            if (q && !sendBtn.disabled) send(q);
+            if (navigator.vibrate) navigator.vibrate(20);
+        });
+    });
+
+    setTimeout(() => inputEl.focus(), 500);
+
+})();
+</script>
+</body>
+</html>
